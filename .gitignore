@@ -34,4 +34,4 @@
 
 # Application Secrets (local)
 .secrets
-.env
+# .env

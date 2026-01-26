@@ -19,6 +19,10 @@ Run the following command to start the infrastructure:
 
 This script wraps `docker-compose up -d` to launch the containers in the background.
 
+If you want recreate the spring app, you can use this command : 
+
+`docker-compose up -d --build --force-recreate`
+
 ## Check it
 
 You can verify that the containers are running:

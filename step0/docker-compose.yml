@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  # Vault container
+  vault:
+    image: vault:1.11.2
+    container_name: ${VAULT_HOST}
+    environment:
+      - VAULT_DEV_ROOT_TOKEN_ID=${VAULT_DEV_ROOT_TOKEN_ID}
+    ports:
+      - "8200:8200"
+    cap_add:
+      - IPC_LOCK
+  # Postgres container
+  db:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      - POSTGRES_DB=test
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+  # Spring Boot application container
+  web:
+    build: 
+      context: ./spring-app
+      dockerfile: dockerfile
+    container_name: spring-app
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/test
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
