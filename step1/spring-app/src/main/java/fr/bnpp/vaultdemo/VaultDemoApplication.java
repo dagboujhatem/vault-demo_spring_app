@@ -1,4 +1,4 @@
-package com.example.vaultdemo;
+package fr.bnpp.vaultdemo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -34,6 +34,8 @@ Run the following command to start everything:
 
 ```bash
 ./run.sh
+# or
+docker-compose -f ./docker-compose.yml up -d
 ```
 
 If you need to rebuild the Spring app (e.g., after a code change), use:
@@ -51,6 +53,16 @@ docker ps
 ```
 
 You should see `spring-app`, `postgres`, and `vault` containers up and running.
+
+## Database & Configuration Check
+
+Since **Spring Boot Actuator** is enabled, you can inspect the active configuration (including database settings) at the following URLs:
+
+- **All Configuration Properties**: [http://localhost:8080/actuator/configprops](http://localhost:8080/actuator/configprops)
+- **Environment Variables**: [http://localhost:8080/actuator/env](http://localhost:8080/actuator/env)
+- **Health Status**: [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health)
+
+In `configprops`, search for `spring.datasource` to see the exact URL, username, and driver currently in use.
 
 ## Next Step
 
