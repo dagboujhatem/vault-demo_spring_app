@@ -90,13 +90,7 @@ The following diagram shows the CI/CD pipeline:
 
 ![Vault CI/CD](screenshots/2-cicd.png)
 
-### How to use to integrate Vault in your Application (DEV side)?
-
-To integrate Vault in your application, you need to follow the following steps:
-
-* Configure Vault
-* Extract Credentials
-* Run Application
+### How to use to integrate Vault in our IaC pipeline?
 
 ![Vault RoleID vs SecretID](screenshots/4-roleid-vs-secretid.png)
 
@@ -108,12 +102,29 @@ To better understand the integration process, we have split the execution into s
 
 ![Vault Become a Ninja](screenshots/5-become-a-ninja.png)
 
+To integrate Vault in your application, you need to follow the following steps:
+
+* Create Vault (any method you want)
+* Find Secret in application code (database credentials, api keys, SSL certificates, etc.)
+* Put secrets in Vault (static or dynamic)
+* Configure **Authentication Method** (AppRole, Kubernetes, AWS, Azure, etc.)
+* Configure **Vault Policies**
+* Refactor application to use **Vault secrets**
+* Run Application
 
 ### Step 0: Infrastructure
 
 In this step, we start the necessary infrastructure (Vault and PostgreSQL) using Docker Compose.
 
-See more on the [step0/run.sh](./step0/run.sh).
+See more details on the [step0/README.md](./step0/README.md).
+
+In this step, we will explore the Vault basics:
+
+- Authentication Methods
+- Secrets
+- Policies
+
+See more details on the [step0/vault-basics/README.md](./step0/vault-basics/README.md).
 
 ### Step 1: Configuration (Terraform)
 
