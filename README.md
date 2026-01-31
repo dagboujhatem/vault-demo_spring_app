@@ -1,5 +1,12 @@
 # Vault Training (using Spring Boot Application)
 
+![Vault](https://img.shields.io/badge/Vault-1.15+-1dbb3c?logo=hashicorp&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2+-6db33f?logo=springboot&logoColor=white)
+![Terraform](https://img.shields.io/badge/Terraform-1.6+-844fba?logo=terraform&logoColor=white)
+![Java](https://img.shields.io/badge/Java-17+-007396?logo=java&logoColor=white)
+![License](https://img.shields.io/github/license/dagboujhatem/vault-demo_spring_app)
+
+
 This repository is dedicated to the talk: **Be secret like a ninja with Vault Hashicorp** (Spring Boot Edition).
 
 **Disclaimer**: The repository is here for demonstration purpose. Meaning: No best practice and a lot of review.
