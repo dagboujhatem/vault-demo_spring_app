@@ -34,7 +34,7 @@ services:
       - db
   # Terraform container
   terraform:
-    image: hashicorp/terraform:light
+    image: hashicorp/terraform:1.7.0
     container_name: terraform
     environment:
       - VAULT_TOKEN=${VAULT_DEV_ROOT_TOKEN_ID}
@@ -44,7 +44,10 @@ services:
     volumes:
       - ./terraform/:/app/
     working_dir: /app/
-    command: apply -auto-approve
+    entrypoint: ["sh", "-c"]
+    command: "tail -f /dev/null"
+    #entrypoint: ["sh", "-c"]
+    #command: "terraform version && terraform init && terraform apply -auto-approve"
   # Spring Boot application container
   web:
     build: 

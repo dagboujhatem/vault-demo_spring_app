@@ -6,7 +6,7 @@ In this final step, we run the Spring Boot application and see Vault in action!
 
 1.  **Authentication**: The application uses the `ROLE_ID` and `SECRET_ID` (from the `.secrets` file) to authenticate with Vault.
 2.  **Secret Retrieval**: Once authenticated, the Spring Cloud Vault connector automatically fetches temporary database credentials from the Vault Database Secret Engine.
-3.  **Connection**: The application connects to MySQL using these dynamic credentials.
+3.  **Connection**: The application connects to PostgreSQL using these dynamic credentials.
 
 ## Run it
 

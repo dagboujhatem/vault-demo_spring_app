@@ -7,7 +7,7 @@ This repository is dedicated to the talk: **Be secret like a ninja with Vault Ha
 For the demonstration, we will based on a basic application using the following stack:
 
 * Spring Boot (Java)
-* MYSQL
+* PostgreSQL
 * HashiCorp Vault
 
 ## Steps ? Which steps ?
@@ -16,7 +16,7 @@ To better understand the integration process, we have split the execution into s
 
 ### Step 0: Infrastructure
 
-In this step, we start the necessary infrastructure (Vault and MySQL) using Docker Compose.
+In this step, we start the necessary infrastructure (Vault and PostgreSQL) using Docker Compose.
 
 See more on the [step0/run.sh](./step0/run.sh).
 
@@ -40,7 +40,7 @@ See more on the [step3/run.sh](./step3/run.sh).
 
 ### Step 4: Run Application (AppRole)
 
-In this final step, we run the Spring Boot application. It uses the credentials from Step 2 to authenticate with Vault, fetch the database credentials, and connect to MySQL.
+In this final step, we run the Spring Boot application. It uses the credentials from Step 2 to authenticate with Vault, fetch the database credentials, and connect to PostgreSQL.
 
 See more on the [step4/run.sh](./step4/run.sh).
 
@@ -52,4 +52,8 @@ Future step for alternative authentication methods or advanced usage (e.g., Vaul
 
 You see something wrong ? You want extra information or more ?
 
-Contact me: <hatem.daghbouj@example.com>
+Contact me: <dagboujhatem@gmail.com>
+
+## References
+- [Youtube Video](https://www.youtube.com/watch?v=RjlZlrm06Qw&list=PLCFwfUlM-doMLAAH5gAc-eOaC-Csi4JvX)
+- [Github Inspiration](https://github.com/mehdilaruelle/vault-demo/tree/master)

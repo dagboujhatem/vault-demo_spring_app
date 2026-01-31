@@ -1,3 +1,3 @@
 provider "vault" {
-  address = "http://vault:8200"
+  address = "http://localhost:8200" 
 }
