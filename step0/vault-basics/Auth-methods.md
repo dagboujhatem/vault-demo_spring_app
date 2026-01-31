@@ -18,8 +18,45 @@ Authentication in HashiCorp Vault is the process by which users or machines prov
 -   **Kubernetes**: Allows applications running in Kubernetes pods to authenticate using their service account tokens.
 -   **Cloud-specific (AWS, GCP, Azure)**: Uses cloud identity services (e.g., IAM roles) to authenticate instances and services.
 
+![Vault Auth Methods](../../screenshots/1-4-auth-methods.png)
+
 ## Important Concepts
 
 -   **Mounting**: Auth methods must be "enabled" or "mounted" at a specific path (e.g., `auth/github/`).
 -   **Entities and Groups**: Vault uses an Identity Store (Identity Secrets Engine) to map multiple auth methods to a single unique identifier (Entity), allowing unified policy management.
 -   **Lease and TTL**: Every token has a Time-To-Live (TTL). When it expires, the token is no longer valid unless renewed.
+
+## Bests Practices
+
+👉 Auth method choice `depends on where the app runs`
+
+- Use **AppRole** for machine-to-machine authentication.
+- Use **Kubernetes** for applications running in Kubernetes pods.
+- Use **Cloud-specific** for cloud-based applications.
+- Use **Token** for manual users in simple environments.
+- Use **Userpass** for manual users in simple environments.
+
+For example, in CI/CD pipelines, we can use **AppRole** for machine-to-machine authentication.
+
+## Auth Methods use cases examples:
+
+**AppRole** Ideal for:
+
+- CI/CD
+- VMs
+- Non-cloud-native apps
+
+👉 Works everywhere
+
+Other auth methods (even better when possible):
+
+- Kubernetes auth → best for K8s/OpenShift workloads
+- AWS auth → best for EC2 / ECS / AWS Lambda
+- Azure auth → best for Azure workloads
+- OIDC → best for users
+
+
+## References
+
+- [Vault Authentication Methods](https://developer.hashicorp.com/vault/docs/auth)
+

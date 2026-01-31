@@ -6,9 +6,9 @@ This directory contains documentation on the fundamental concepts of HashiCorp V
 
 Vault's security model is built on three main components that work together to secure your infrastructure:
 
-1.  **[Authentication Methods](./Auth-methods.md)**: How users and applications prove their identity to Vault.
+1.  **[Secrets Engines](./Secrets.md)**: How Vault stores, generates, and manages sensitive data (static and dynamic).
 2.  **[Policies](./Policies.md)**: How Vault defines and enforces what an authenticated identity is allowed to do.
-3.  **[Secrets Engines](./Secrets.md)**: How Vault stores, generates, and manages sensitive data (static and dynamic).
+3.  **[Authentication Methods](./Auth-methods.md)**: How users and applications prove their identity to Vault.
 
 ## How they interact
 
@@ -32,4 +32,14 @@ graph LR
 
 ---
 
+
+![Vault Auth Token](../../screenshots/1-4-auth-token.avif)
+
+
+## References
+
 For more detailed information, please refer to the individual documentation files linked above.
+
+- [Vault Authentication Methods](https://developer.hashicorp.com/vault/docs/auth)
+- [Vault Policies](https://developer.hashicorp.com/vault/docs/concepts/policy)
+- [Vault Secrets Engines](https://developer.hashicorp.com/vault/docs/secrets)

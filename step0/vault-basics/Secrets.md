@@ -30,3 +30,17 @@ Dynamic secrets are generated on-demand and have a limited lifetime. This is one
 2.  **TTL (Time-To-Live)**: The duration for which the secret is valid.
 3.  **Renewal**: Some leases can be renewed before they expire to extend their lifetime.
 4.  **Revocation**: Once a lease expires (or is explicitly revoked), Vault will automatically delete the credential from the target system (e.g., dropping the database user).
+
+
+## Bests Practices
+
+- Use **KV v2** for static secrets.
+- Use **Dynamic Secrets** for dynamic secrets.
+- Use **Token** for manual users in simple environments.
+- Use **Userpass** for manual users in simple environments.
+
+For example, in this demo, we will use **KV v2** for static secrets and **Dynamic Secrets** for dynamic secrets.
+
+## References
+
+- [Vault Secrets Engines](https://developer.hashicorp.com/vault/docs/secrets)
