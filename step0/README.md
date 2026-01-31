@@ -9,6 +9,7 @@ We use **Docker Compose** to spin up:
 - **PostgreSQL**: The database (listening on port 5432).
 - **Spring Boot App**: A standard REST API for user management (listening on port 8080).
 - **Vault**: The secret management server (listening on port 8200) - Started but not yet used by the app.
+- **pgadmin**: The database admin interface (listening on port 5050).
 
 ## The API
 
@@ -77,6 +78,17 @@ This our starting point Spring application with secret divulgation.
 You can find the Spring application code in the folder `spring-app/`. Where there is only one file [application.yaml](./spring-app/src/main/resources/application.yaml). Inside this file, in **line 10 & 11**, you can find the database user and password in cleartext.
 
 Our goal is to secure this Spring application with [Hashicorp Vault](https://www.vaultproject.io/).
+
+## Access pgadmin: 
+
+You can access pgadmin from your browser using the following credentials:
+
+- **Email**: [EMAIL_ADDRESS]
+- **Password**: [PASSWORD]
+
+and access pgadmin using this URL : 
+
+[http://localhost:5050/login?next=/browser/](http://localhost:5050/login?next=/browser/)
 
 ## Next Step
 

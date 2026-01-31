@@ -1,40 +1,51 @@
 package fr.bnpp.vaultdemo.service;
 
+import fr.bnpp.vaultdemo.dto.CreateUserDTO;
+import fr.bnpp.vaultdemo.dto.UpdateUserDTO;
+import fr.bnpp.vaultdemo.dto.UserDTO;
 import fr.bnpp.vaultdemo.entity.UserEntity;
+import fr.bnpp.vaultdemo.mapper.UserMapper;
 import fr.bnpp.vaultdemo.repo.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public List<UserEntity> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public Optional<UserEntity> getUserById(Integer id) {
-        return userRepository.findById(id);
+    public Optional<UserDTO> getUserById(Integer id) {
+        return userRepository.findById(id)
+                .map(userMapper::toDTO);
     }
 
-    public UserEntity createUser(UserEntity user) {
-        return userRepository.save(user);
+    public UserDTO createUser(CreateUserDTO createUserDTO) {
+        UserEntity entity = userMapper.toEntity(createUserDTO);
+        UserEntity savedEntity = userRepository.save(entity);
+        return userMapper.toDTO(savedEntity);
     }
 
-    public UserEntity updateUser(Integer id, UserEntity userDetails) {
+    public UserDTO updateUser(Integer id, UpdateUserDTO updateUserDTO) {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found for id: " + id));
         
-        user.setUsername(userDetails.getUsername());
-        user.setEmail(userDetails.getEmail());
-        user.setPassword(userDetails.getPassword());
+        userMapper.updateEntityFromDTO(updateUserDTO, user);
         
-        return userRepository.save(user);
+        UserEntity updatedEntity = userRepository.save(user);
+        return userMapper.toDTO(updatedEntity);
     }
 
     public void deleteUser(Integer id) {
