@@ -14,11 +14,11 @@ We use **Docker Compose** to spin up:
 
 The application provides a standard CRUD for managing users:
 
-- `GET /api/users`: List all users.
-- `GET /api/users/{id}`: Get one user.
-- `POST /api/users`: Create a user.
-- `PUT /api/users/{id}`: Update a user.
-- `DELETE /api/users/{id}`: Delete a user.
+- `GET /api/v1/users`: List all users.
+- `GET /api/v1/users/{id}`: Get one user.
+- `POST /api/v1/users`: Create a user.
+- `PUT /api/v1/users/{id}`: Update a user.
+- `DELETE /api/v1/users/{id}`: Delete a user.
 
 ## Environment Configuration
 
@@ -33,8 +33,9 @@ Database settings are managed via the `.env` file at the root of this folder. Yo
 Run the following command to start everything:
 
 ```bash
-./run.sh
-# or
+# Run application & tests
+./run.sh 
+# Or run only the application
 docker-compose -f ./docker-compose.yml up -d
 ```
 
@@ -53,6 +54,13 @@ docker ps
 ```
 
 You should see `spring-app`, `postgres`, and `vault` containers up and running.
+
+After running, you can test the application using this command 
+
+```bash
+# Run only the application test
+./test.sh
+```
 
 ## Database & Configuration Check
 
