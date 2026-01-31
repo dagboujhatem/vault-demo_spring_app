@@ -1,40 +1,39 @@
-# API User - Documentation
+# User API - Documentation
 
-## 📚 Technologies utilisées
+## 📚 Technologies Used
 
-- **Lombok** : Réduction du code boilerplate avec `@Data`, `@RequiredArgsConstructor`, etc.
-- **MapStruct** : Mapping automatique et performant entre Entity et DTOs
-- **DTOs** : Séparation claire entre la couche de données et l'API
-- **Swagger/OpenAPI 3** : Documentation interactive de l'API avec springdoc-openapi
+- **Lombok**: Boilerplate code reduction using `@Data`, `@RequiredArgsConstructor`, etc.
+- **MapStruct**: Automatic and high-performance mapping between Entity and DTOs.
+- **DTOs**: Clear separation between the data layer and the API.
+- **Swagger/OpenAPI 3**: Interactive API documentation with springdoc-openapi.
 
-## 📖 Documentation Interactive (Swagger UI)
+## 📖 Interactive Documentation (Swagger UI)
 
-Une fois l'application démarrée, accédez à la documentation interactive Swagger :
+Once the application is started, access the interactive Swagger documentation:
 
-- **Swagger UI** : [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
-- **OpenAPI JSON** : [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
-- **OpenAPI YAML** : [http://localhost:8080/v3/api-docs.yaml](http://localhost:8080/v3/api-docs.yaml)
+- **Swagger UI**: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+- **OpenAPI JSON**: [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+- **OpenAPI YAML**: [http://localhost:8080/v3/api-docs.yaml](http://localhost:8080/v3/api-docs.yaml)
 
-**Fonctionnalités de Swagger UI** :
-- 🔍 Exploration interactive de tous les endpoints
-- 🧪 Tester les API directement depuis le navigateur
-- 📝 Schémas détaillés des requêtes/réponses
-- 💡 Exemples de données pour chaque endpoint
-- 🎯 Codes de réponse HTTP documentés
+**Swagger UI Features**:
+- 🔍 Interactive exploration of all endpoints.
+- 🧪 Test APIs directly from the browser.
+- 📝 Detailed request/response schemas.
+- 💡 Data examples for each endpoint.
+- 🎯 Documented HTTP response codes.
 
+## 🔒 Security
 
-## 🔒 Sécurité
+The password is **never exposed** in API responses thanks to the use of DTOs.
 
-Le mot de passe n'est **jamais exposé** dans les réponses de l'API grâce à l'utilisation de DTOs.
+## 🚀 Available Endpoints
 
-## 🚀 Endpoints disponibles
-
-### 1. Liste tous les utilisateurs
+### 1. List All Users
 ```http
 GET /api/v1/users
 ```
 
-**Réponse** : `200 OK`
+**Response**: `200 OK`
 ```json
 [
   {
@@ -47,12 +46,12 @@ GET /api/v1/users
 
 ---
 
-### 2. Récupérer un utilisateur par ID
+### 2. Get User by ID
 ```http
 GET /api/v1/users/{id}
 ```
 
-**Réponse** : `200 OK` ou `404 Not Found`
+**Response**: `200 OK` or `404 Not Found`
 ```json
 {
   "id": 1,
@@ -63,13 +62,13 @@ GET /api/v1/users/{id}
 
 ---
 
-### 3. Créer un nouvel utilisateur
+### 3. Create a New User
 ```http
 POST /api/v1/users
 Content-Type: application/json
 ```
 
-**Body** :
+**Body**:
 ```json
 {
   "username": "jane_doe",
@@ -78,7 +77,7 @@ Content-Type: application/json
 }
 ```
 
-**Réponse** : `201 Created`
+**Response**: `201 Created`
 ```json
 {
   "id": 2,
@@ -89,13 +88,13 @@ Content-Type: application/json
 
 ---
 
-### 4. Mettre à jour un utilisateur
+### 4. Update a User
 ```http
 PUT /api/v1/users/{id}
 Content-Type: application/json
 ```
 
-**Body** :
+**Body**:
 ```json
 {
   "username": "jane_smith",
@@ -103,11 +102,11 @@ Content-Type: application/json
 }
 ```
 
-**Notes** :
-- Le mot de passe **n'est pas modifiable** via cet endpoint
-- Les champs `null` sont ignorés (mise à jour partielle possible)
+**Notes**:
+- The password **cannot be modified** via this endpoint.
+- `null` fields are ignored (partial update supported).
 
-**Réponse** : `200 OK` ou `404 Not Found`
+**Response**: `200 OK` or `404 Not Found`
 ```json
 {
   "id": 2,
@@ -118,12 +117,12 @@ Content-Type: application/json
 
 ---
 
-### 5. Supprimer un utilisateur
+### 5. Delete a User
 ```http
 DELETE /api/v1/users/{id}
 ```
 
-**Réponse** : `204 No Content`
+**Response**: `204 No Content`
 
 ---
 
@@ -131,45 +130,47 @@ DELETE /api/v1/users/{id}
 
 ```
 src/main/java/fr/bnpp/vaultdemo/
+├── config/
+│   └── OpenAPIConfig.java        # Swagger/OpenAPI configuration
 ├── controller/
-│   └── UserController.java      # Endpoints REST (utilise DTOs)
+│   └── UserController.java       # REST Endpoints (uses DTOs)
 ├── service/
-│   └── UserService.java          # Logique métier (utilise Mapper)
+│   └── UserService.java           # Business logic (uses Mapper)
 ├── entity/
-│   └── UserEntity.java           # Entité JPA (avec Lombok)
+│   └── UserEntity.java            # JPA Entity (with Lombok)
 ├── dto/
-│   ├── UserDTO.java              # Réponse (sans password)
-│   ├── CreateUserDTO.java        # Création (avec password)
-│   └── UpdateUserDTO.java        # Mise à jour (sans id ni password)
+│   ├── UserDTO.java               # Response (without password)
+│   ├── CreateUserDTO.java         # Creation (with password)
+│   └── UpdateUserDTO.java         # Update (without id or password)
 ├── mapper/
-│   └── UserMapper.java           # Interface MapStruct
+│   └── UserMapper.java            # MapStruct interface
 └── repo/
-    └── UserRepository.java       # Repository JPA
+    └── UserRepository.java        # JPA Repository
 ```
 
-## 🔄 Flux de données
+## 🔄 Data Flow
 
-### Création d'un utilisateur :
+### User Creation:
 ```
 CreateUserDTO → Mapper → UserEntity → DB → UserEntity → Mapper → UserDTO
 ```
 
-### Mise à jour d'un utilisateur :
+### User Update:
 ```
-UpdateUserDTO → Mapper (mise à jour partielle) → UserEntity → DB → UserDTO
+UpdateUserDTO → Mapper (partial update) → UserEntity → DB → UserDTO
 ```
 
-## ⚡ Avantages de cette architecture
+## ⚡ Architecture Benefits
 
-1. **Sécurité** : Le mot de passe n'est jamais exposé dans les réponses
-2. **Performance** : MapStruct génère du code au compile-time (pas de réflexion)
-3. **Maintenabilité** : Lombok réduit le code boilerplate
-4. **Flexibilité** : Les DTOs permettent de contrôler exactement quelles données sont exposées
-5. **Type-safety** : Erreurs détectées à la compilation
+1. **Security**: Password is never exposed in responses.
+2. **Performance**: MapStruct generates code at compile-time (no reflection).
+3. **Maintainability**: Lombok reduces boilerplate code.
+4. **Flexibility**: DTOs allow precise control over exposed data.
+5. **Type-safety**: Errors detected at compilation.
 
-## 🧪 Test avec curl
+## 🧪 Testing with curl
 
-### Créer un utilisateur
+### Create a User
 ```bash
 curl -X POST http://localhost:8080/api/v1/users \
   -H "Content-Type: application/json" \
@@ -180,12 +181,12 @@ curl -X POST http://localhost:8080/api/v1/users \
   }'
 ```
 
-### Récupérer tous les utilisateurs
+### Get All Users
 ```bash
 curl http://localhost:8080/api/v1/users
 ```
 
-### Mettre à jour un utilisateur
+### Update a User
 ```bash
 curl -X PUT http://localhost:8080/api/v1/users/1 \
   -H "Content-Type: application/json" \
