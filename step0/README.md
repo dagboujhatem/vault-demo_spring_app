@@ -1,6 +1,6 @@
-# Step 0: Starting Point (REST API & Postgres)
+# Step 0: Starting Point (Spring boot application with REST API & Postgres database)
 
-In this step, we prepare the ground for our application by starting our base stack. This represents the application *before* any Vault integration.
+In this step, we prepare the ground for our Spring boot application by starting our base stack. This represents the application *before* any Vault integration.
 
 ## Architecture
 
