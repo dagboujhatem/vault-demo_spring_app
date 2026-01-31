@@ -1,4 +1,4 @@
-# Vault demonstration (Spring Boot)
+# Vault Training (using Spring Boot Application)
 
 This repository is dedicated to the talk: **Be secret like a ninja with Vault Hashicorp** (Spring Boot Edition).
 
@@ -10,9 +10,104 @@ For the demonstration, we will based on a basic application using the following 
 * PostgreSQL
 * HashiCorp Vault
 
+### Prerequisites
+
+Before starting the steps, make sure you have the following tools installed:
+
+* Docker
+* Docker Compose
+* Terraform
+* Java
+* Maven
+* Git 
+* Scripting (shell)
+* Curl (or any http client)
+
+## Introduction 
+
+### What is Vault ?
+
+Vault is a tool for secrets management, encryption, and authentication. It is a tool that helps you to manage your secrets in a secure way.
+
+![Introduction to Vault](screenshots/1-intro.png)
+
+### Vault Architecture :
+
+The following diagram shows the Vault architecture, it's a simple diagram to understand the Vault architecture (it's a production architecture used to deploy Vault in production). 
+
+![Vault Architecture](screenshots/1-1-arch.png)
+![Vault Architecture](screenshots/1-2-archi-v2.png)
+
+The key Benefits of Deploying Vault in Multi-AZ is :
+
+- High Availability (HA) — No Single Point of Failure
+- Strong Resilience Against Infrastructure Failures
+- Secure and Consistent Data with HA Backends
+- Zero-Downtime Upgrades & Maintenance
+- Better Security Posture (Defense in Depth)
+- Improved Performance & Latency (Smart Placement)
+- Mandatory for Production & Compliance
+- Disaster Recovery & Backup Readiness
+
+### Vault Storage Backend : 
+
+Vault supports multiple storage backends, including : 
+
+- Consul
+- DynamoDB
+- Filesystem
+- GCS
+- In-memory
+- Integrated Storage (Raft)
+- PostgreSQL
+- Redis
+- S3
+- SQL Server
+- Zookeeper
+
+![Vault Architecture](screenshots/1-3-storage-backend.png)
+
+
+**Note**: 
+- In this demo, we will use the `Integrated Storage (Raft)` backend.
+- In production, we will use the `High Availability (HA)` backend with any backend storage.
+- In dev, we will use the `In-memory` backend (not recommended for production).
+
+
+### Integration in CI/CD pipeline (OPS side)?
+
+CI/CD pipeline is a process that automates the entire software delivery process. It includes the following steps to deploy an infrastructure (Infrastructure as Code - IaC):
+
+* Create Infrastructure as Code (IaC) using Terraform 
+* Push IaC to Gitlab repository (or any other repository)
+* Deploy Infrastructure using Terraform : in this step, we will use : 
+  - Create the Database (for example, PostgreSQL)
+  - Create the `Vault secrets` for access to the database : in this step, we will use `Database` secrets engine (to generate **dynamic credentials**) or simply we can create a `KV` secrets engine (to generate **static credentials**)
+  - Create the `Vault policies` : in this step, we will create the policies to control the access to the secrets using **Vault policies** 
+  - Create the authentication method `AppRole`: in this step, we will create the `AppRole` authentication method and attach the policies to it in order to control the access to the secrets (for example, we can create a policy to allow the application to read the secrets). We can also use other authentication methods like `Kubernetes` authentication method, `AWS` authentication method, `Azure` authentication method, etc. 
+
+The following diagram shows the CI/CD pipeline:
+
+![Vault CI/CD](screenshots/2-cicd.png)
+
+### How to use to integrate Vault in your Application (DEV side)?
+
+To integrate Vault in your application, you need to follow the following steps:
+
+* Configure Vault
+* Extract Credentials
+* Run Application
+
+![Vault RoleID vs SecretID](screenshots/4-roleid-vs-secretid.png)
+
+
 ## Steps ? Which steps ?
 
 To better understand the integration process, we have split the execution into several steps.
+
+
+![Vault Become a Ninja](screenshots/5-become-a-ninja.png)
+
 
 ### Step 0: Infrastructure
 
