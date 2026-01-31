@@ -30,6 +30,7 @@
 *.tfstate
 *.tfstate.backup
 *.tfvars
+!terraform.tfvars
 .terraform.lock.hcl
 
 # Application Secrets (local)
