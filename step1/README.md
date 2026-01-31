@@ -21,6 +21,17 @@ Run the following command to wait for Terraform to complete the configuration:
 
 This script waits until the Terraform container successfully exits.
 
+## Access pgadmin: 
+
+You can access pgadmin from your browser using the following credentials:
+
+- **Email**: [PGADMIN_DEFAULT_EMAIL]
+- **Password**: [PGADMIN_DEFAULT_PASSWORD]
+
+and access pgadmin using this URL : 
+
+[http://localhost:5050/browser/](http://localhost:5050/browser/)
+
 ## Next Step
 
 Once configured, we need to get the credentials (RoleID and SecretID) to login. Go to [Step 2](../step2/README.md).

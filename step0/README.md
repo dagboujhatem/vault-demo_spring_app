@@ -88,7 +88,7 @@ You can access pgadmin from your browser using the following credentials:
 
 and access pgadmin using this URL : 
 
-[http://localhost:5050/login?next=/browser/](http://localhost:5050/login?next=/browser/)
+[http://localhost:5050/browser/](http://localhost:5050/browser/)
 
 ## Next Step
 
