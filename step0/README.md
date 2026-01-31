@@ -83,8 +83,8 @@ Our goal is to secure this Spring application with [Hashicorp Vault](https://www
 
 You can access pgadmin from your browser using the following credentials:
 
-- **Email**: [EMAIL_ADDRESS]
-- **Password**: [PASSWORD]
+- **Email**: [PGADMIN_DEFAULT_EMAIL]
+- **Password**: [PGADMIN_DEFAULT_PASSWORD]
 
 and access pgadmin using this URL : 
 
