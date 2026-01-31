@@ -56,13 +56,11 @@ You should see `spring-app`, `postgres`, and `vault` containers up and running.
 
 ## Database & Configuration Check
 
-Since **Spring Boot Actuator** is enabled, you can inspect the active configuration (including database settings) at the following URLs:
+This our starting point Spring application with secret divulgation.
 
-- **All Configuration Properties**: [http://localhost:8080/actuator/configprops](http://localhost:8080/actuator/configprops)
-- **Environment Variables**: [http://localhost:8080/actuator/env](http://localhost:8080/actuator/env)
-- **Health Status**: [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health)
+You can find the Spring application code in the folder `spring-app/`. Where there is only one file [application.yaml](./spring-app/src/main/resources/application.yaml). Inside this file, in **line 10 & 11**, you can find the database user and password in cleartext.
 
-In `configprops`, search for `spring.datasource` to see the exact URL, username, and driver currently in use.
+Our goal is to secure this Spring application with [Hashicorp Vault](https://www.vaultproject.io/).
 
 ## Next Step
 
