@@ -20,6 +20,14 @@ The application provides a standard CRUD for managing users:
 - `PUT /api/v1/users/{id}`: Update a user.
 - `DELETE /api/v1/users/{id}`: Delete a user.
 
+## API Documentation Interactive (Swagger UI)
+
+Once the application is started, access the interactive Swagger documentation:
+
+- **Swagger UI** : [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+- **OpenAPI JSON** : [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+- **OpenAPI YAML** : [http://localhost:8080/v3/api-docs.yaml](http://localhost:8080/v3/api-docs.yaml)
+
 ## Environment Configuration
 
 Database settings are managed via the `.env` file at the root of this folder. You can configure:
