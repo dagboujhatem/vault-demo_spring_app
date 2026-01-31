@@ -11,6 +11,14 @@ The KV secrets engine is used to store arbitrary secrets within the configured p
 
 Example path: `secret/data/webapp/config`
 
+### Secret v1 vs Secret v2
+
+KV (Key-Value) secrets engine comes in two versions:
+
+
+
+**Important:** KV (v1 or v2) is only for static secrets, not dynamic credentials.
+
 ## Dynamic Secrets
 
 Dynamic secrets are generated on-demand and have a limited lifetime. This is one of Vault's most powerful features.
@@ -18,6 +26,10 @@ Dynamic secrets are generated on-demand and have a limited lifetime. This is one
 -   **Database**: Vault can generate temporary credentials for databases (SQL, NoSQL). When an application needs to connect, it asks Vault for credentials, and Vault creates a new user with specific permissions.
 -   **Cloud**: Generate temporary IAM access keys or tokens for AWS, GCP, and Azure.
 -   **PKI**: Generate X.509 certificates on the fly.
+
+
+![Vault Dynamic Secrets](../../screenshots/6-secret-as-service.png)
+
 
 ### Benefits of Dynamic Secrets
 -   **No Shared Credentials**: Every client gets unique credentials.
@@ -44,3 +56,4 @@ For example, in this demo, we will use **KV v2** for static secrets and **Dynami
 ## References
 
 - [Vault Secrets Engines](https://developer.hashicorp.com/vault/docs/secrets)
+- [Vault Secrets Version](https://developer.hashicorp.com/vault/docs/secrets/kv)
