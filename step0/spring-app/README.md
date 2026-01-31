@@ -5,6 +5,23 @@
 - **Lombok** : Réduction du code boilerplate avec `@Data`, `@RequiredArgsConstructor`, etc.
 - **MapStruct** : Mapping automatique et performant entre Entity et DTOs
 - **DTOs** : Séparation claire entre la couche de données et l'API
+- **Swagger/OpenAPI 3** : Documentation interactive de l'API avec springdoc-openapi
+
+## 📖 Documentation Interactive (Swagger UI)
+
+Une fois l'application démarrée, accédez à la documentation interactive Swagger :
+
+- **Swagger UI** : [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+- **OpenAPI JSON** : [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+- **OpenAPI YAML** : [http://localhost:8080/v3/api-docs.yaml](http://localhost:8080/v3/api-docs.yaml)
+
+**Fonctionnalités de Swagger UI** :
+- 🔍 Exploration interactive de tous les endpoints
+- 🧪 Tester les API directement depuis le navigateur
+- 📝 Schémas détaillés des requêtes/réponses
+- 💡 Exemples de données pour chaque endpoint
+- 🎯 Codes de réponse HTTP documentés
+
 
 ## 🔒 Sécurité
 
