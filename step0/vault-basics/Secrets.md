@@ -15,7 +15,14 @@ Example path: `secret/data/webapp/config`
 
 KV (Key-Value) secrets engine comes in two versions:
 
-
+| Feature | KV Version 1 | KV Version 2 |
+| :--- | :--- | :--- |
+| **Versioning** | No versioning (overwrite only) | Supports multiple versions (up to a limit) |
+| **Deletion** | Permanent deletion | Soft delete (can be undeleted) |
+| **Check-and-Set (CAS)** | Not supported | Supported (prevents accidental overwrites) |
+| **Path Structure** | Direct path (e.g., `secret/myapp`) | Injects `data/` or `metadata/` (e.g., `secret/data/myapp`) |
+| **Metadata** | No metadata support | Supports custom metadata and per-version data |
+| **API Complexity** | Simple | More complex (due to versioning) |
 
 **Important:** KV (v1 or v2) is only for static secrets, not dynamic credentials.
 
