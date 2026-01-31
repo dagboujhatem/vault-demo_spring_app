@@ -18,6 +18,9 @@ Example:
 vault_policy "myapp-prod"
 ```
 
+Capabilities are the verbs allowed on a path.
+
+Example:
 
 ```hcl
 path "secret/data/webapp/*" {
