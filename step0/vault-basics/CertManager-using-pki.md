@@ -23,6 +23,8 @@ sequenceDiagram
     CM->>Pod: Create K8s Secret (tls.crt, tls.key)
 ```
 
+![Cert-manager key concepts](../../screenshots/11-cert-manager.webp)
+
 ## Key Kubernetes Resources
 
 ### 1. Issuer / ClusterIssuer

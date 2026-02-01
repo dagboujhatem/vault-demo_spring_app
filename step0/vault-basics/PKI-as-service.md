@@ -33,6 +33,8 @@ sequenceDiagram
 -   **Intermediate CA**: Signed by the Root CA. Vault typically acts as an Intermediate CA for daily certificate issuance.
 -   **Dynamic Issuance**: Certificates are generated on-demand and are not stored in Vault's persistent storage by default to keep the storage clean (unlike KV secrets).
 
+![CA key concepts](../../screenshots/12-ca.webp)
+
 ## Benefits of Short-lived Certs
 
 -   **No need for Revocation Monitoring**: If a certificate expires in 1 hour, the incentive to monitor CRLs is lower because the window for abuse is extremely small.
@@ -47,3 +49,5 @@ sequenceDiagram
 ## References
 - [Vault PKI Secrets Engine](https://developer.hashicorp.com/vault/docs/secrets/pki)
 - [Medium article on how to use PKI as a Service](https://medium.com/hashicorp-engineering/pki-as-a-service-with-hashicorp-vault-a8d075ece9a)
+- [Medium article : Setting Up PKI Engine with HashiCorp Vault for Certificate Management](https://manjit28.medium.com/setting-up-pki-engine-with-hashicorp-vault-for-certificate-management-ca35f10c9600)
+

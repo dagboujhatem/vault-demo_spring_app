@@ -22,6 +22,8 @@ sequenceDiagram
     Vault-->>Dev: Return Cert to Application
 ```
 
+![Venafi key concepts](../../screenshots/9-venafi.png)
+
 ## Key Integration Benefits
 
 ### 1. Unified Policy Enforcement
