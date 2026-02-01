@@ -27,6 +27,8 @@ The **Secrets Store CSI Driver** (Container Storage Interface) allows Kubernetes
     - Can sync Vault secrets to Kubernetes `Secret` objects.
 - **Comparison**: Use CSI for simple volume mounts; use Vault Agent for complex templating or high-performance caching.
 
+![Vault CSI](../../screenshots/10-CSI-driver.webp)
+
 ## Best Practices for Performance
 
 To ensure optimal performance and reliability when using Vault Agent:
@@ -41,3 +43,6 @@ To ensure optimal performance and reliability when using Vault Agent:
 ## References
 - [Vault Agent Overview](https://developer.hashicorp.com/vault/docs/agent)
 - [Vault Secret Store CSI Driver](https://developer.hashicorp.com/vault/docs/platform/k8s/csi)
+- [Medium article on how to use Vault CSI driver](https://apavankumar.medium.com/hashicvault-secrets-in-kubernetes-with-csi-driver-ec917d4a2672)
+
+

@@ -46,3 +46,4 @@ sequenceDiagram
 
 ## References
 - [Vault PKI Secrets Engine](https://developer.hashicorp.com/vault/docs/secrets/pki)
+- [Medium article on how to use PKI as a Service](https://medium.com/hashicorp-engineering/pki-as-a-service-with-hashicorp-vault-a8d075ece9a)

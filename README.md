@@ -213,6 +213,18 @@ We can use the following patterns:
 
 See more on the [step8/README.md](./step8/README.md).
 
+![Vault Agent & Consul Env & Consul Template](screenshots/10-CSI-driver.webp)
+
+### Step 9: Cert-Manager with Vault PKI
+
+In this step, based on the previous step, we will use Cert-Manager to generate certificates and private keys on the fly.
+
+The goal is to generate certificates and private keys on the fly.
+
+See more on the [step9/README.md](./step9/README.md).
+
+![Vault Agent & Consul Env & Consul Template](screenshots/11-cert-manager.webp)
+
 ## Contact
 
 You see something wrong ? You want extra information or more ?
@@ -222,3 +234,13 @@ Contact me: <dagboujhatem@gmail.com>
 ## References
 - [Youtube Video](https://www.youtube.com/watch?v=RjlZlrm06Qw&list=PLCFwfUlM-doMLAAH5gAc-eOaC-Csi4JvX)
 - [Github Inspiration](https://github.com/mehdilaruelle/vault-demo/tree/master)
+- [Vault Agent Injector Tutorial (initContainer)](https://devopscube.com/vault-agent-injector-tutorial/)
+- [Medium article on how to use Vault CSI driver](https://apavankumar.medium.com/hashicvault-secrets-in-kubernetes-with-csi-driver-ec917d4a2672)
+- [Vault CSI driver on Kubernetes](https://piotrminkowski.com/2023/03/20/vault-with-secrets-store-csi-driver-on-kubernetes/)
+- [Medium article on how to use PKI as a Service](https://medium.com/hashicorp-engineering/pki-as-a-service-with-hashicorp-vault-a8d075ece9a)
+- [Medium article on how to use Cert-Manager](https://medium.com/@tashikmoinsheikh/the-ultimate-deep-dive-automating-ssl-tls-with-cert-manager-in-kubernetes-83c91ae11df4)
+- [Medium article on how to use Cert-Manager using HELM](https://medium.com/@selvamraju007/cert-manger-use-case-how-to-deploy-cert-manager-and-how-to-configure-it-to-get-certificates-for-8da2a7e2396)
+- [Medium article on how to use Cert-Manager / Vault Integration with Local CA](https://rob-mengert.medium.com/cert-manager-vault-integration-with-local-ca-1ae52fb442c2)
+- [Medium article on how to use HashiCorp Vault as Certificate Issuer on a Kubernetes Cluster](https://genekuo.medium.com/using-hashicorp-vault-as-certificate-manager-on-a-kubernetes-cluster-155604d39a60)
+
+
