@@ -115,6 +115,7 @@ To avoid the security risk of the SecretID, we can communicate only the `RoleID`
 
 ![Vault RoleID vs SecretID](screenshots/4-roleid-vs-secretid.png)
 
+Every pipeline use the following steps to provisioning the IaC in Vault : 
 
 ```text
 Terraform → Vault (via OIDC / token / K8s auth)
