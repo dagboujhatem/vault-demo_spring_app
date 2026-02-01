@@ -99,7 +99,7 @@ The following diagram shows the CI/CD pipeline:
 
 ### How to use to integrate Vault in our IaC pipeline?
 
-![Vault RoleID vs SecretID](screenshots/3-approle.png)
+![Vault AppRole](screenshots/3-approle.png)
 
 ![Vault RoleID vs SecretID](screenshots/4-roleid-vs-secretid.png)
 
