@@ -44,5 +44,7 @@ To ensure optimal performance and reliability when using Vault Agent:
 - [Vault Agent Overview](https://developer.hashicorp.com/vault/docs/agent)
 - [Vault Secret Store CSI Driver](https://developer.hashicorp.com/vault/docs/platform/k8s/csi)
 - [Medium article on how to use Vault CSI driver](https://apavankumar.medium.com/hashicvault-secrets-in-kubernetes-with-csi-driver-ec917d4a2672)
-
+-  [Vault Agent Injector Tutorial (initContainer)](https://devopscube.com/vault-agent-injector-tutorial/)
+- [Vault CSI driver on Kubernetes](https://piotrminkowski.com/2023/03/20/vault-with-secrets-store-csi-driver-on-kubernetes/)
+- [Kubernetes Vault integration via Sidecar Agent Injector vs. Vault Secrets Operator vs. CSI provider](https://www.hashicorp.com/en/blog/kubernetes-vault-integration-via-sidecar-agent-injector-vs-csi-provider)
 
