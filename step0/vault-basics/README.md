@@ -9,6 +9,15 @@ Vault's security model is built on three main components that work together to s
 1.  **[Secrets Engines](./Secrets.md)**: How Vault stores, generates, and manages sensitive data (static and dynamic).
 2.  **[Policies](./Policies.md)**: How Vault defines and enforces what an authenticated identity is allowed to do.
 3.  **[Authentication Methods](./Auth-methods.md)**: How users and applications prove their identity to Vault.
+4.  **[Leases](./Lease.md)**: How Vault manages the lifecycle and expiration of secrets and tokens.
+5.  **[Leases in Kubernetes](./Lease-in-k8s.md)**: How Vault Agent automates lease management in K8s environments.
+6.  **[Vault Agent](./Vault-agent.md)**: Deployment modes (InitContainer, Sidecar) and CSI provider best practices.
+7.  **[Consul-Template and EnvConsul](./Consul-env-template.md)**: Transparent secret injection for legacy or non-cloud-native apps.
+8.  **[Encryption as a Service](./Encryption-as-service.md)**: Offloading cryptography to Vault using the Transit engine.
+9.  **[PKI as a Service](./PKI-as-service.md)**: Generating dynamic X.509 certificates on the fly.
+10. **[Cert-Manager with Vault](./CertManager-using-pki.md)**: Automating certificate management in Kubernetes.
+11. **[HashiCorp Vault and Venafi](./Venafi.md)**: Enterprise-grade machine identity management and policy enforcement.
+
 
 ## How they interact
 

@@ -26,7 +26,7 @@ KV (Key-Value) secrets engine comes in two versions:
 
 **Important:** KV (v1 or v2) is only for static secrets, not dynamic credentials.
 
-## Dynamic Secrets
+## Dynamic Secrets (Best Practices)
 
 Dynamic secrets are generated on-demand and have a limited lifetime. This is one of Vault's most powerful features.
 
@@ -50,15 +50,46 @@ Dynamic secrets are generated on-demand and have a limited lifetime. This is one
 3.  **Renewal**: Some leases can be renewed before they expire to extend their lifetime.
 4.  **Revocation**: Once a lease expires (or is explicitly revoked), Vault will automatically delete the credential from the target system (e.g., dropping the database user).
 
+### Static Secret vs Dynamic Secret
+
+| Feature | Static Secrets (KV) | Dynamic Secrets |
+| :--- | :--- | :--- |
+| **Generation** | Manually stored or CI/CD managed | Generated on-demand by Vault |
+| **Lifetime** | Persist until manually changed/deleted | Short-lived (attached to a lease) |
+| **Credentials** | Shared among authorized clients | Unique for every single request |
+| **Revocation** | Manual process | Automatic upon lease expiry |
+| **Target System** | Vault itself stores the data | Target system (DB, Cloud) creates the identity |
+
+### Use Cases for each type of secrets (Static vs Dynamic)
+
+#### Static Secrets (KV)
+-   Storing **API Keys** for 3rd party services (SendGrid, Twilio, etc.).
+-   **Application Configuration** that is sensitive (license keys).
+-   **Certificates** that are not yet managed by a PKI (legacy certs).
+-   **Master Passwords** that are rarely rotated.
+
+#### Dynamic Secrets
+-   **Database Access**: Temporary users for SQL/NoSQL databases to avoid hardcoded credentials.
+-   **Cloud Infrastructure**: Temporary IAM roles for AWS, GCP, or Azure.
+-   **PKI**: On-the-fly generation of TLS certificates for internal services.
+-   **SSH**: Temporary OTP or signed keys for server access.
+
 
 ## Bests Practices
 
-- Use **KV v2** for static secrets.
-- Use **Dynamic Secrets** for dynamic secrets.
-- Use **Token** for manual users in simple environments.
-- Use **Userpass** for manual users in simple environments.
-
-For example, in this demo, we will use **KV v2** for static secrets and **Dynamic Secrets** for dynamic secrets.
+- Use **KV v2** for static secrets (configuration values, API keys, fixed credentials).
+- Use **Dynamic Secrets Engines** (Database, AWS, PKI, etc.) for dynamic secrets
+(ephemeral credentials with TTL and automatic rotation).
+- Use **Token authentication only for manual or temporary usage** (testing, troubleshooting, break-glass access).
+- Use **Userpass authentication only for simple, non-production environments** (local demos, labs, PoCs).
+- Prefer **machine-based authentication methods** in production: 
+    - **AppRole** for CI/CD, VMs, legacy apps.
+    - **Kubernetes authentication** for containerized workloads (Pods, StatefulSets, Deployments).
+    - **JWT** for external services (e.g., API gateways).
+    - **Userpass** for human operators (e.g., DBAs, DevOps engineers).
+    - **Token** for temporary or break-glass access.
+    - **AWS auth** for EC2, ECS, Lambda
+    - **OIDC** for Humans (SSO)
 
 ## References
 
