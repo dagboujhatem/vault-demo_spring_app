@@ -6,10 +6,9 @@ spring:
   # Production Database Configuration
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/${POSTGRES_DB:prod_db}
-    username: ${POSTGRES_USER:user}
-    password: ${POSTGRES_PASSWORD:password}
     driver-class-name: org.postgresql.Driver
-
+  
+  # JPA Configuration
   jpa:
     hibernate:
       ddl-auto: validate # Usually validate in prod
@@ -17,6 +16,19 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # Vault Configuration
+  cloud:
+    vault:
+      uri: ${VAULT_ADDR:http://localhost:8200}
+      authentication: APPROLE
+      app-role:
+        role-id: ${VAULT_ROLE_ID}
+        secret-id: ${VAULT_SECRET_ID}
+      database:
+        enabled: true
+        role: ${VAULT_DATABASE_ROLE}
+        backend: ${VAULT_DATABASE_BACKEND}
 
 # Documentation is enabled globally in application.yaml, 
 # but we can explicitly ensure it's on here as well if needed.

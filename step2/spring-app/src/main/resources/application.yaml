@@ -3,12 +3,9 @@ spring:
     name: vault-demo
 
   # Database Configuration (PostgreSQL)
-  # These values can be overridden by environment variables:
-  # POSTGRES_HOST, POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/${POSTGRES_DB:test}
-    username: ${POSTGRES_USER:user}
-    password: ${POSTGRES_PASSWORD:password}
+    # username and password will be provided by Spring Cloud Vault
     driver-class-name: org.postgresql.Driver
 
   # JPA Configuration
@@ -20,6 +17,18 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
+  # Vault Configuration
+  cloud:
+    vault:
+      uri: ${VAULT_ADDR:http://localhost:8200}
+      authentication: APPROLE
+      app-role:
+        role-id: ${VAULT_ROLE_ID}
+        secret-id: ${VAULT_SECRET_ID}
+      database:
+        enabled: true
+        role: ${VAULT_DATABASE_ROLE}
+        backend: ${VAULT_DATABASE_BACKEND}
 # Actuator Configuration
 management:
   endpoints:
