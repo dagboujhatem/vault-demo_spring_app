@@ -173,7 +173,7 @@ See more on the [step4/README.md](./step4/README.md).
 
 ### Step 5: Vault agent only 
 
-In this step, based on the step 3, we will use Vault agent to authentication with Vault server and to render template file with secrets. It's an alternative to the step 4. The step 4 is a way to implement secret through environment variables and step 4b is a way to implement secret through a file.
+In this step, based on the step 3, we will use Vault agent to authentication with Vault server and to render template file with secrets. It's an alternative to the step 6. The step 6 is a way to implement secret through environment variables and step 6 is a way to implement secret through a file.
 
 The goal is to interact with the Vault transparently for an application (no app change).
 
@@ -186,6 +186,32 @@ In this step, based on the previous step, we will use Vault agent to authenticat
 The goal is to interact with the Vault transparently for an application (no app change).
 
 See more on the [step6/README.md](./step6/README.md).
+
+![Vault Agent & Consul Env & Consul Template](screenshots/8-consul.png)
+
+### Step 7: Venafi & Vault (SSL/TLS)
+
+In this step, based on the previous step, we will use Venafi to generate certificates and private keys on the fly.
+
+The goal is to generate certificates and private keys on the fly.
+
+See more on the [step7/README.md](./step7/README.md).
+
+![Vault Venafi](screenshots/9-venafi.png)
+
+
+### Step 8: Vault Agent (initContainer & Sidecar Pattern, CSI provider)
+
+In this step, based on the previous step, we will use Vault agent to authentication and get secrets from Vault server.
+
+The goal is to interact with the Vault transparently for an application (no app change).
+
+We can use the following patterns:
+- initContainer
+- Sidecar Pattern
+- CSI provider
+
+See more on the [step8/README.md](./step8/README.md).
 
 ## Contact
 
