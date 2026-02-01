@@ -32,22 +32,6 @@ services:
       - "5050:80"
     depends_on:
       - db
-  # Terraform container
-  terraform:
-    image: hashicorp/terraform:1.7.0
-    container_name: terraform
-    environment:
-      - VAULT_TOKEN=${VAULT_DEV_ROOT_TOKEN_ID}
-    depends_on:
-      - db
-      - vault
-    volumes:
-      - ./terraform/:/app/
-    working_dir: /app/
-    entrypoint: ["sh", "-c"]
-    command: "tail -f /dev/null"
-    #entrypoint: ["sh", "-c"]
-    #command: "terraform version && terraform init && terraform apply -auto-approve"
   # Spring Boot application container
   web:
     build: 
@@ -57,14 +41,9 @@ services:
     environment:
       - POSTGRES_HOST=db
       - POSTGRES_DB=${POSTGRES_DB}
-      - VAULT_ADDR=http://vault:8200
-      - VAULT_ROLE_ID=${VAULT_ROLE_ID}
-      - VAULT_SECRET_ID=${VAULT_SECRET_ID}
-      - VAULT_APP_CODE=AP0001
-      - VAULT_ENV=dev
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     depends_on:
       - db
-      - vault
-      - terraform
     ports:
       - "8080:8080"

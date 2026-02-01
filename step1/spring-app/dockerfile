@@ -9,6 +9,14 @@ RUN mvn package -DskipTests
 # Run stage
 FROM eclipse-temurin:17-jre
 WORKDIR /app
+
+# Install curl and jq for Vault interaction
+RUN apt-get update && apt-get install -y curl jq && rm -rf /var/lib/apt/lists/*
+
 COPY --from=build /app/target/*.jar app.jar
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
+
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["./entrypoint.sh"]
+
