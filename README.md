@@ -123,11 +123,13 @@ To integrate Vault in your application, you need to follow the following steps:
 
 ### Step 0: Find secrets
 
-In this step, we start the necessary infrastructure (Vault and PostgreSQL) using Docker Compose.
+In this step, we start the necessary infrastructure (Vault and PostgreSQL) using Docker Compose. Also we start the Web application (Spring Boot) using Docker Compose.
+
+In this step, we will use the `In-memory` backend for Vault (not recommended for production). Also, the main goal is to find the secrets in the application code (database credentials, api keys, SSL certificates, etc.) and put them in Vault in a static way (static secrets) in the next step.
 
 See more details on the [step0/README.md](./step0/README.md).
 
-In this step, we will explore the Vault basics:
+In addition, we will explore the Vault basics:
 
 - Authentication Methods
 - Secrets
