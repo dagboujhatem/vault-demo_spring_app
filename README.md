@@ -111,23 +111,12 @@ To better understand the integration process, we have split the execution into s
 
 ![Vault Become a Ninja](screenshots/5-become-a-ninja.png)
 
-To integrate Vault in your application, you need to follow the following steps:
-
-* Create Vault (any method you want)
-* Find Secret in application code (database credentials, api keys, SSL certificates, etc.)
-* Put secrets in Vault (static or dynamic)
-* Configure **Authentication Method** (AppRole, Kubernetes, AWS, Azure, etc.)
-* Configure **Vault Policies**
-* Refactor application to use **Vault secrets**
-* Run Application
-
 ### Step 0: Find secrets
 
 In this step, we start the necessary infrastructure (Vault and PostgreSQL) using Docker Compose. Also we start the Web application (Spring Boot) using Docker Compose.
 
 In this step, we will use the `In-memory` backend for Vault (not recommended for production). Also, the main goal is to find the secrets in the application code (database credentials, api keys, SSL certificates, etc.) and put them in Vault in a static way (static secrets) in the next step.
 
-See more details on the [step0/README.md](./step0/README.md).
 
 In addition, we will explore the Vault basics:
 
@@ -137,23 +126,42 @@ In addition, we will explore the Vault basics:
 
 See more details on the [step0/vault-basics/README.md](./step0/vault-basics/README.md).
 
+See more details on the [step0/README.md](./step0/README.md).
+
 ### Step 1: Static Secrets
 
 In this step, we add a entrypoint dealing with Vault (Authentication + retrieve secrets) inside the application without changing the code.
+
+To integrate Vault in our application, we need to follow the following steps:
+
+* Create Vault (any method you want)
+* Find Secret in application code (database credentials, api keys, SSL certificates, etc.)
+* Put secrets in Vault (static)
+* Configure **Authentication Method** (AppRole, Kubernetes, AWS, Azure, etc.)
+* Configure **Vault Policies**
+* Refactor application to use **Vault secrets**
+* Run Application
 
 See more on the [step1/README.md](./step1/README.md).
 
 ### Step 2: Dynamic Secrets (Secret as a Service)
 
 In this step, we remove the entrypoint in the previous step and changing the applications code.
+To integrate Vault in our application, we need to follow the following steps:
+
+* Create Vault (any method you want)
+* Find Secret in application code (database credentials, api keys, SSL certificates, etc.)
+* Put secrets in Vault (dynamic)
+* Configure **Authentication Method** (AppRole, Kubernetes, AWS, Azure, etc.)
+* Configure **Vault Policies**
+* Refactor application to use **Vault secrets**
+* Run Application
 
 The goal is to use, at each time, a new database user (username+password) access.
 
-See more on the [step2/README.md](./step2/README.md).
-
 ![Vault Dynamic Secrets](screenshots/6-secret-as-service.png)
 
-
+See more on the [step2/README.md](./step2/README.md).
 
 ### Step 3: Encryption as a Service
 
