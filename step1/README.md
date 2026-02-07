@@ -26,6 +26,34 @@ After getting the **token**, the application can send the token to the Vault to 
 
 ![Spring Vault Static Secrets](screenshots/spring-vault-static-secrets.png)
 
+---
+### Step-by-Step Breakdown of the Static Secret Retrieval Process
+
+1. **Enable AppRole Authentication Method**
+    - Configure the **AppRole** authentication method in Vault.
+    - RoleID and SecretID are used by the application to authenticate.
+
+2. **Create a Policy for Access**
+    - Define a **Vault Policy** that provides read access to the required secrets (e.g., database credentials).
+
+3. **Set Up the Database Secrets Engine**
+    - Enable the **Database Secret Engine** in Vault (e.g., Postgres).
+    - Configure the database engine to generate secrets dynamically or provide static ones.
+
+4. **Define a Role for Application Mapping**
+    - Link the previously created policy to a specific role.
+    - The application will use this role.
+
+5. **Configure Spring Boot Application to Connect to Vault**
+    - Set `spring.cloud.vault` properties in `application.yml`.
+    - Use the `AppRole` authentication method to provide RoleID and SecretID.
+    - Configure paths (`kv.backend`, `application-name`, and additional context).
+
+6. **Authenticate and Retrieve Secrets**
+    - The Spring application authenticates using RoleID and SecretID.
+    - Retrieve the database credentials or other secrets based on the defined configuration.
+## Implementation in Spring
+
 ### Available Options:
 
 1. **Option 1: Many secrets in the same path (simple)**  
