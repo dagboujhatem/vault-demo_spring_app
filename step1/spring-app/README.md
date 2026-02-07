@@ -195,6 +195,402 @@ curl -X PUT http://localhost:8080/api/v1/users/1 \
     "email": "updated@example.com"
   }'
 ```
+## Spring Logging Level
+Logging levels control how much detail Spring (and your application) writes to the logs.
+
+| Level   | Description                                                                 |
+|---------|-----------------------------------------------------------------------------|
+| `OFF`   | Disables all logging.                                                       |
+| `FATAL` | Logs very severe error events that will lead the application to abort.      |
+| `ERROR` | Logs error events that might still allow the application to continue.       |
+| `WARN`  | Logs potentially harmful situations.                                        |
+| `INFO`  | Logs informational messages that highlight the progress of the application. |
+| `DEBUG` | Logs fine-grained informational events for debugging purposes.              |
+| `TRACE` | Logs the most detailed information. Useful for diagnosing specific issues.  |
+| `ALL`   | Enables all logging levels.                                                 |
+
+
+
+
+### Configure Logging Level in `application.yaml`
+
+```yaml
+logging:
+  level:
+    # ==================================================
+    # ROOT (toujours maîtrisé)
+    # ==================================================
+    root: WARN
+
+    # ==================================================
+    # Couche 1 – Spring Boot (niveau application)
+    # ==================================================
+    org.springframework.boot: DEBUG
+    org.springframework.boot.context: DEBUG
+    org.springframework.boot.autoconfigure: DEBUG
+    org.springframework.boot.web: DEBUG
+
+    # ==================================================
+    # Couche 2 – Spring Framework (niveau framework)
+    # ==================================================
+    org.springframework: INFO
+    org.springframework.context: DEBUG
+    org.springframework.beans: DEBUG
+    org.springframework.core: DEBUG
+    org.springframework.aop: DEBUG
+    org.springframework.transaction: DEBUG
+
+    # ==================================================
+    # Couche 3 – Vault & External Config
+    # ==================================================
+    org.springframework.cloud.vault: TRACE
+    org.springframework.vault: TRACE
+    org.springframework.cloud.config: DEBUG
+
+    # ==================================================
+    # Couche 4 – Java I/O & NIO
+    # ==================================================
+    java.io: DEBUG
+    java.nio: DEBUG
+    sun.nio: DEBUG
+
+    # ==================================================
+    # Couche 5 – Cloud Storage (S3 / SDKs)
+    # ==================================================
+    software.amazon.awssdk: DEBUG
+    com.amazonaws.services.s3: DEBUG
+
+    # ==================================================
+    # Couche 6 – SSL / TLS
+    # ==================================================
+    sun.security.ssl: DEBUG
+    javax.net.ssl: DEBUG
+
+    # ==================================================
+    # Couche 7 – Database / ORM / JDBC
+    # ==================================================
+    org.springframework.jdbc: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+    com.zaxxer.hikari: DEBUG
+
+    # JDBC Drivers
+    com.mysql.cj: DEBUG
+    org.postgresql: DEBUG
+    oracle.jdbc: DEBUG
+    com.teradata: DEBUG
+
+    # NoSQL
+    org.mongodb.driver: DEBUG
+    org.elasticsearch: DEBUG
+
+    # ==================================================
+    # Couche 8 – Messaging / MQ
+    # ==================================================
+    org.apache.kafka: DEBUG
+    com.rabbitmq: DEBUG
+    com.ibm.mq: DEBUG
+    com.ibm.msg.client: DEBUG
+
+    # ==================================================
+    # Couche 9 – HTTP / Web
+    # ==================================================
+    org.springframework.web: DEBUG
+    org.springframework.web.client: TRACE
+    feign: DEBUG
+
+    # ==================================================
+    # Couche 10 – Spring Security
+    # ==================================================
+    org.springframework.security: DEBUG
+
+    # ==================================================
+    # Couche 11 – Actuator / Monitoring
+    # ==================================================
+    org.springframework.boot.actuate: DEBUG
+
+    # ==================================================
+    # Couche 12 – JVM / Internals
+    # ==================================================
+    jdk.internal: DEBUG
+
+```
+
+### Configure Logging Level in `application.properties`
+
+```properties
+# ==================================================
+# ROOT (toujours maîtrisé)
+# ==================================================
+logging.level.root=WARN
+
+# ==================================================
+# Couche 1 – Spring Boot (niveau application)
+# ==================================================
+logging.level.org.springframework.boot=DEBUG
+logging.level.org.springframework.boot.context=DEBUG
+logging.level.org.springframework.boot.autoconfigure=DEBUG
+logging.level.org.springframework.boot.web=DEBUG
+
+# ==================================================
+# Couche 2 – Spring Framework (niveau framework)
+# ==================================================
+logging.level.org.springframework=INFO
+logging.level.org.springframework.context=DEBUG
+logging.level.org.springframework.beans=DEBUG
+logging.level.org.springframework.core=DEBUG
+logging.level.org.springframework.aop=DEBUG
+logging.level.org.springframework.transaction=DEBUG
+
+# ==================================================
+# Couche 3 – Vault & External Config
+# ==================================================
+logging.level.org.springframework.cloud.vault=TRACE
+logging.level.org.springframework.vault=TRACE
+logging.level.org.springframework.cloud.config=DEBUG
+
+# ==================================================
+# Couche 4 – Java I/O & NIO
+# ==================================================
+logging.level.java.io=DEBUG
+logging.level.java.nio=DEBUG
+logging.level.sun.nio=DEBUG
+
+# ==================================================
+# Couche 5 – Cloud Storage (S3 / SDKs)
+# ==================================================
+logging.level.software.amazon.awssdk=DEBUG
+logging.level.com.amazonaws.services.s3=DEBUG
+
+# ==================================================
+# Couche 6 – SSL / TLS
+# ==================================================
+logging.level.sun.security.ssl=DEBUG
+logging.level.javax.net.ssl=DEBUG
+
+# ==================================================
+# Couche 7 – Database / ORM / JDBC
+# ==================================================
+logging.level.org.springframework.jdbc=DEBUG
+logging.level.org.hibernate.SQL=DEBUG
+logging.level.org.hibernate.type.descriptor.sql=TRACE
+logging.level.com.zaxxer.hikari=DEBUG
+
+# JDBC Drivers
+logging.level.com.mysql.cj=DEBUG
+logging.level.org.postgresql=DEBUG
+logging.level.oracle.jdbc=DEBUG
+logging.level.com.teradata=DEBUG
+
+# NoSQL
+logging.level.org.mongodb.driver=DEBUG
+logging.level.org.elasticsearch=DEBUG
+
+# ==================================================
+# Couche 8 – Messaging / MQ
+# ==================================================
+logging.level.org.apache.kafka=DEBUG
+logging.level.com.rabbitmq=DEBUG
+logging.level.com.ibm.mq=DEBUG
+logging.level.com.ibm.msg.client=DEBUG
+
+# ==================================================
+# Couche 9 – HTTP / Web
+# ==================================================
+logging.level.org.springframework.web=DEBUG
+logging.level.org.springframework.web.client=TRACE
+logging.level.feign=DEBUG
+
+# ==================================================
+# Couche 10 – Spring Security
+# ==================================================
+logging.level.org.springframework.security=DEBUG
+
+# ==================================================
+# Couche 11 – Actuator / Monitoring
+# ==================================================
+logging.level.org.springframework.boot.actuate=DEBUG
+
+# ==================================================
+# Couche 12 – JVM / Internals
+# ==================================================
+logging.level.jdk.internal=DEBUG
+```
+
+### Configure Logging Level with Env Variables in K8S
+
+```yaml
+env:
+  # ==================================================
+  # ROOT
+  # ==================================================
+  - name: LOGGING_LEVEL_ROOT
+    value: "WARN"
+
+  # ==================================================
+  # Couche 1 – Spring Boot
+  # ==================================================
+  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_BOOT
+    value: "DEBUG"
+  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_BOOT_AUTOCONFIGURE
+    value: "DEBUG"
+
+  # ==================================================
+  # Couche 2 – Spring Framework
+  # ==================================================
+  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK
+    value: "INFO"
+  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_CONTEXT
+    value: "DEBUG"
+  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_BEANS
+    value: "DEBUG"
+  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_TRANSACTION
+    value: "DEBUG"
+
+  # ==================================================
+  # Couche 3 – Vault & External Config
+  # ==================================================
+  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_CLOUD_VAULT
+    value: "TRACE"
+  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_VAULT
+    value: "TRACE"
+  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_CLOUD_CONFIG
+    value: "DEBUG"
+
+  # ==================================================
+  # Couche 4 – Java I/O
+  # ==================================================
+  - name: LOGGING_LEVEL_JAVA_IO
+    value: "DEBUG"
+  - name: LOGGING_LEVEL_JAVA_NIO
+    value: "DEBUG"
+
+  # ==================================================
+  # Couche 5 – Cloud Storage (S3)
+  # ==================================================
+  - name: LOGGING_LEVEL_SOFTWARE_AMAZON_AWSSDK
+    value: "DEBUG"
+
+  # ==================================================
+  # Couche 6 – SSL / TLS
+  # ==================================================
+  - name: LOGGING_LEVEL_SUN_SECURITY_SSL
+    value: "DEBUG"
+  - name: LOGGING_LEVEL_JAVAX_NET_SSL
+    value: "DEBUG"
+
+  # ==================================================
+  # Couche 7 – Database / ORM / JDBC
+  # ==================================================
+  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_JDBC
+    value: "DEBUG"
+  - name: LOGGING_LEVEL_ORG_HIBERNATE_SQL
+    value: "DEBUG"
+  - name: LOGGING_LEVEL_ORG_HIBERNATE_TYPE_DESCRIPTOR_SQL
+    value: "TRACE"
+  - name: LOGGING_LEVEL_COM_ZAXXER_HIKARI
+    value: "DEBUG"
+
+  # JDBC Drivers
+  - name: LOGGING_LEVEL_COM_MYSQL_CJ
+    value: "DEBUG"
+  - name: LOGGING_LEVEL_ORG_POSTGRESQL
+    value: "DEBUG"
+  - name: LOGGING_LEVEL_ORACLE_JDBC
+    value: "DEBUG"
+
+  # ==================================================
+  # Couche 8 – MQ / Messaging
+  # ==================================================
+  - name: LOGGING_LEVEL_ORG_APACHE_KAFKA
+    value: "DEBUG"
+  - name: LOGGING_LEVEL_COM_RABBITMQ
+    value: "DEBUG"
+  - name: LOGGING_LEVEL_COM_IBM_MQ
+    value: "DEBUG"
+  - name: LOGGING_LEVEL_COM_IBM_MSG_CLIENT
+    value: "DEBUG"
+
+  # ==================================================
+  # Couche 9 – HTTP / Web
+  # ==================================================
+  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB
+    value: "DEBUG"
+  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB_CLIENT
+    value: "TRACE"
+  - name: LOGGING_LEVEL_FEIGN
+    value: "DEBUG"
+
+  # ==================================================
+  # Couche 10 – Spring Security
+  # ==================================================
+  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY
+    value: "DEBUG"
+
+  # ==================================================
+  # Couche 11 – Actuator / Monitoring
+  # ==================================================
+  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_BOOT_ACTUATE
+    value: "DEBUG"
+
+  # ==================================================
+  # Couche 12 – JVM Internals
+  # ==================================================
+  - name: LOGGING_LEVEL_JDK_INTERNAL
+    value: "DEBUG"
+```
+
+## Actuator settings
+
+### Configure Logging Level in `application.yaml`
+
+```yaml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    loggers:
+      enabled: true
+    health:
+      show-details: ALWAYS
+    env:
+        show-values: ALWAYS
+  logging:
+    level:
+      root: INFO
+      web: DEBUG
+```
+
+### Configure Logging Level in `application.properties`
+
+```properties
+management.endpoints.web.exposure.include=*
+management.endpoint.loggers.enabled=true
+management.endpoint.health.show-details=ALWAYS
+management.endpoint.env.show-values=ALWAYS
+management.logging.level.root=INFO
+management.logging.level.web=DEBUG
+```
+
+### Configure Actuator with Env Variables in K8S
+
+```yaml
+env:
+  - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+    value: "*"
+  - name: MANAGEMENT_ENDPOINT_LOGGERS_ENABLED
+    value: "true"
+  - name: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
+    value: "ALWAYS"
+  - name: MANAGEMENT_ENDPOINT_ENV_SHOW_VALUES
+    value: "ALWAYS"
+  - name: MANAGEMENT_LOGGING_LEVEL_ROOT
+    value: "INFO"
+  - name: MANAGEMENT_LOGGING_LEVEL_WEB
+    value: "DEBUG"
+```
 
 ## Dockerization Strategies for Spring Boot Applications 
 

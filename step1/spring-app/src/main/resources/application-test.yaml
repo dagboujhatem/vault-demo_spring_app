@@ -1,0 +1,75 @@
+spring:
+  application:
+    name: AP0001
+  # Spring Config
+  config:
+    import: vault://
+  # Spring Cloud Vault
+  cloud:
+    vault:
+      uri:  ${VAULT_ADDR:http://localhost:8200}
+      authentication: APPROLE
+      app-role:
+        role-id: ${VAULT_ROLE_ID:15dd3864-8891-4985-22ef-914870e2aaef}
+        secret-id: ${VAULT_SECRET_ID:64b4b4d2-afc4-f0c0-dd6d-87cd32492424}
+      kv:
+        # Active l’utilisation du moteur KV (Key-Value)
+        enabled: true
+        # Nom du mount KV v2 dans Vault (ex: secrets/)   
+        backend: secrets
+        # Chemin logique du secret dans Vault
+        # → secrets/data/AP0001/database/creds
+        application-name: AP0001/database/creds
+        # Désactive le contexte 'application' par défaut
+        # (sinon Spring tenterait aussi de lire secrets/application)
+        default-context: ""
+        # Désactive le rafraîchissement automatique des secrets
+        # Désactive le mécanisme de lease/refresh
+        # Recommandé pour des secrets statiques (username/password)
+        lifecycle:
+          enabled: false
+
+  # Production Database Configuration
+  # Database Configuration (PostgreSQL)
+  # These values can be overridden by environment variables:
+  # POSTGRES_HOST, POSTGRES_DB, username, password
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/${POSTGRES_DB:test}
+    username: ${username}
+    password: ${password}
+    driver-class-name: org.postgresql.Driver
+
+  # JPA Configuration
+  jpa:
+    hibernate:
+      ddl-auto: validate # Usually validate in prod
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+# Documentation is enabled globally in application.yaml, 
+# but we can explicitly ensure it's on here as well if needed.
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+  
+# Activate log TRACE
+#logging:
+#  level:
+#    org.springframework.web.client: TRACE
+#    org.springframework.cloud.vault: TRACE
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    env:
+        show-values: ALWAYS
