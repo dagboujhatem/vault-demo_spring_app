@@ -1,6 +1,23 @@
 spring:
   application:
     name: vault-demo
+  # Spring Config
+  config:
+    import: vault://
+  # Spring Cloud Vault
+  cloud:
+    vault:
+      uri: http://localhost:8200
+      authentication: APPROLE
+      app-role:
+        role-id: ${VAULT_ROLE_ID}
+        secret-id: ${VAULT_SECRET_ID}
+      kv:
+        enabled: false
+      database:
+        enabled: true
+        role: ${VAULT_DATABASE_ROLE}
+        backend: ${VAULT_DATABASE_BACKEND}
 
   # Database Configuration (PostgreSQL)
   datasource:
@@ -52,3 +69,8 @@ springdoc:
     display-request-duration: true
     doc-expansion: none
   show-actuator: true
+
+# Activate log
+logging:
+  level:
+    org.springframework.web.client: TRACE

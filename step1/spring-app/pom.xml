@@ -11,8 +11,8 @@
 	<groupId>fr.bnpp</groupId>
 	<artifactId>vault-demo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>vault-demo</name>
-	<description>Demo project for Spring Boot and HashiCorp Vault</description>
+	<name>Spring Cloud Vault Configuration Integration</name>
+	<description>Configuration Integration with HashiCorp Vault</description>
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud.version>2023.0.2</spring-cloud.version>
@@ -20,6 +20,10 @@
 		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-vault-config</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -58,6 +62,18 @@
 			<version>2.3.0</version>
 		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>

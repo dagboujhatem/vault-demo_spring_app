@@ -6,11 +6,23 @@ In this step, we configure Vault to work with our application. This includes:
 2.  Creating a **Policy** that allows reading database secrets.
 3.  Configuring the **Database Secret Engine** (Postgres).
 4.  Creating a **Role** that maps the policy to the application.
+5.  Configuring the **Spring Boot** application to use Vault:
+    - Use the AppRole authentication method.
+    - Use the static secrets (RoleID and SecretID) to login to Vault.
+    - Use the database secret engine to get the database credentials (static secrets).
 
 ![Spring Vault Static Secrets](screenshots/spring-vault.png)
 
 ## How it works
 
+To login to Vault using AppRole authentication method, we need to create a role and provide the RoleID and SecretID to the application. In this step, we will use static secrets (RoleID and SecretID) to login to Vault. 
+
+In the following schema, the Vault admin can create the role and policy, and the application can use the **RoleID** and **SecretID** to login to Vault. Vault returns a token to the application, and the application can use the token to get the database credentials.
+
+![Spring Vault AppRole](screenshots/vault-approle-workflow.avif)
+
+
+After getting the **token**, the application can send the token to the Vault to get the database credentials from the **static secret engine**.
 
 ![Spring Vault Static Secrets](screenshots/spring-vault-static-secrets.png)
 
@@ -46,8 +58,8 @@ terraform apply -auto-approve
 terraform apply -auto-approve -var-file="terraform.tfvars"
 
 # Terraform extract role_id and secret_id from terraform output
-terraform output -raw approle_role_id
-terraform output -raw approle_secret_id
+terraform output -raw role_id
+terraform output -raw secret_id
 
 # Terraform destroy 
 terraform destroy -auto-approve
@@ -105,6 +117,15 @@ You can access pgadmin from your browser using the following credentials:
 and access pgadmin using this URL : 
 
 [http://localhost:5050/browser/](http://localhost:5050/browser/)
+
+## Cleanup
+
+Do the following commands:
+
+```bash
+$ docker-compose down
+$ rm terraform/terraform.tfstate
+```
 
 ## Next Step
 

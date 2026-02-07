@@ -6,12 +6,12 @@ This step use Hashicorp Vault dynamic secrets with database. This includes:
 2.  Creating a **Policy** that allows reading database secrets.
 3.  Configuring the **Database Dynamic Secrets Engine** (Postgres).
 4.  Creating a **Role** that maps the policy to the application.
-
-
+5.  Configuring the **Spring Boot** application to use Vault:
+    - Use the AppRole authentication method.
+    - Use the static secrets (RoleID and SecretID) to login to Vault.
+    - Use the database secret engine to get the database credentials (static secrets).
 
 ![Spring Vault Dynamic Secrets](screenshots/spring-vault.png)
-
-
 
 ## How it works
 
@@ -108,6 +108,15 @@ You can access pgadmin from your browser using the following credentials:
 and access pgadmin using this URL : 
 
 [http://localhost:5050/browser/](http://localhost:5050/browser/)
+
+## Cleanup
+
+Do the following commands:
+
+```bash
+$ docker-compose down
+$ rm terraform/terraform.tfstate
+```
 
 ## Next Step
 

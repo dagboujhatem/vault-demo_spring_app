@@ -2,6 +2,19 @@
 set -e
 # Navigate to step directory
 cd "$(dirname "$0")"
+cd ./terraform
+# Get the role_id and secret_id from terraform output
+VAULT_ROLE_ID=$(terraform output -raw role_id)
+VAULT_SECRET_ID=$(terraform output -raw secret_id)
+
+# Export the role_id and secret_id as environment variables
+export VAULT_ROLE_ID
+export VAULT_SECRET_ID
+
+echo "VAULT_ROLE_ID: $VAULT_ROLE_ID"
+echo "VAULT_SECRET_ID: $VAULT_SECRET_ID"
+
+cd ..
 
 echo ">>> Starting App ..."
 docker-compose -f ./docker-compose.yml up -d
