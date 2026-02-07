@@ -1,7 +1,8 @@
-path "secret/data/${entity_name}/*" {
+# Lire uniquement les credentials PostgreSQL (static secrets)
+path "secret/data/${app_name}/*" {
   capabilities = ["read", "list"]
-} 
+}
 
-path "secret/metadata/${entity_name}/*" {
+path "secret/metadata/${app_name}/*" {
   capabilities = ["read", "list"]
 }

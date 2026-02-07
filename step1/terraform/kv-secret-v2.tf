@@ -1,3 +1,4 @@
+# 1. Enable the KV v2 secret engine mount
 resource "vault_mount" "kvv2" {
   path        = "kvv2"
   type        = "kv"
@@ -5,30 +6,12 @@ resource "vault_mount" "kvv2" {
   description = "KV Version 2 secret engine mount"
 }
 
-# Generate a map of all app/env combinations
-locals {
-  app_env_combinations = flatten([
-    for app in var.app_codes : [
-      for env in var.envs : {
-        app_code = app
-        env      = env
-      }
-    ]
-  ])
-}
-
-# Create a secret for each combination
-resource "vault_kv_secret_v2" "app_secret" {
-  for_each = { for combo in local.app_env_combinations : "${combo.app_code}-${combo.env}" => combo }
-
+# 2. Create a KV v2 secret
+resource "vault_kv_secret_v2" "database_creds" {
   mount = vault_mount.kvv2.path
-  name  = "${each.value.app_code}/${each.value.env}/${var.secret_name}"
-
-  cas   = 1
-  delete_all_versions = true
-
+  name  = "database/creds"
   data_json = jsonencode({
-    username = var.username
-    password = var.password
+    username = var.database_username
+    password = var.database_password
   })
 }

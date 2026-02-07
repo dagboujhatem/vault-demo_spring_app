@@ -1,4 +1,4 @@
-# Step 1: Configuration
+# Step 1: Spring load configuration from Vault (Static Secrets)
 
 In this step, we configure Vault to work with our application. This includes:
 
@@ -7,7 +7,14 @@ In this step, we configure Vault to work with our application. This includes:
 3.  Configuring the **Database Secret Engine** (Postgres).
 4.  Creating a **Role** that maps the policy to the application.
 
+![Spring Vault Static Secrets](screenshots/spring-vault.png)
+
 ## How it works
+
+
+![Spring Vault Static Secrets](screenshots/spring-vault-static-secrets.png)
+
+## Infrastructure as Code (IaC) with Terraform
 
 We use **Terraform** to apply this configuration automatically. Terraform spins up as a Docker container, talks to Vault, applies the `.tf` files, and then exits.
 
@@ -46,15 +53,44 @@ terraform output -raw approle_secret_id
 terraform destroy -auto-approve
 # OR
 terraform destroy -auto-approve -var-file="terraform.tfvars"
+
+# Terraform State rm (role "role-web" does not exist)
+terraform state rm vault_approle_auth_backend_role_secret_id.id
 ```
 For more information, see the [Terraform documentation](https://www.terraform.io/docs/index.html).
 
 ## Run it
 
-Run the following command to wait for Terraform to complete the configuration:
+Run the following command to start everything:
 
 ```bash
-./run.sh
+# Run application & tests
+./run.sh 
+# Or run only the application
+docker-compose -f ./docker-compose.yml up -d
+```
+
+If you need to rebuild the Spring app (e.g., after a code change), use:
+
+```bash
+docker-compose up -d --build --force-recreate
+```
+
+## Check it
+
+You can verify that the containers are running:
+
+```bash
+docker ps
+```
+
+You should see `spring-app`, `postgres`, and `vault` containers up and running.
+
+After running, you can test the application using this command 
+
+```bash
+# Run only the application test
+./test.sh
 ```
 
 This script waits until the Terraform container successfully exits.
