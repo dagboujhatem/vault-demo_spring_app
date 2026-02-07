@@ -51,8 +51,8 @@ terraform apply -auto-approve
 terraform apply -auto-approve -var-file="terraform.tfvars"
 
 # Terraform extract role_id and secret_id from terraform output
-terraform output -raw approle_role_id
-terraform output -raw approle_secret_id
+terraform output -raw role_id
+terraform output -raw secret_id
 
 # Terraform destroy 
 terraform destroy -auto-approve

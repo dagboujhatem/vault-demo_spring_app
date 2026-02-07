@@ -17,7 +17,7 @@ echo "VAULT_SECRET_ID: $VAULT_SECRET_ID"
 cd ..
 
 echo ">>> Starting App ..."
-docker-compose -f ./docker-compose.yml up -d
+#docker-compose -f ./docker-compose.yml up -d
 
 echo ">>> App started successfully."
 echo "============================================================="

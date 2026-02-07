@@ -26,6 +26,153 @@ After getting the **token**, the application can send the token to the Vault to 
 
 ![Spring Vault Static Secrets](screenshots/spring-vault-static-secrets.png)
 
+
+### Option 1: Many secrets in the same path (simple)
+
+In this case, we will have **only one path** to read the secrets from Vault. 
+
+**Example :** if you have this path `secrets/data/AP0001/database`, you can use the following config :
+
+```yaml
+spring:
+  cloud:
+    vault:
+      kv:
+        backend: secrets
+        application-name: AP0001/database
+        default-context: ""
+ ````
+
+### Option 2: One secret per path (multi-contexts)
+
+If you have many secrets to loaded, you can use the `generic.application-name` to access to many path in the same time.
+
+**Example :**  if you have 3 secrets like 
+
+```bash
+secrets/AP0001/database
+secrets/AP0001/api
+secrets/AP0001/mail
+```
+
+You can use the following example :
+
+
+```yaml
+spring:
+  cloud:
+    vault:
+      kv:
+        backend: secrets
+        default-context: ""
+      generic:
+        enabled: true
+        application-name:
+          - AP0001/database
+          - AP0001/api
+          - AP0001/mail
+ ````
+### Option 3: Multi-env + multi-secrets (Best Practices)
+
+If you have many secrets to loaded, you can use the `generic.application-name` to access to many path in the same time.
+
+**Example :**  if you have 3 secrets like 
+
+```bash
+secrets/data/AP0001/dev/database
+secrets/data/AP0001/dev/certs
+
+secrets/data/AP0001/prod/database
+secrets/data/AP0001/prod/certs
+```
+
+You can use the following example :
+
+
+```yaml
+spring:
+  application:
+    name: AP0001
+
+  profiles:
+    active: dev   # dev ou prod
+
+  config:
+    import: vault://
+
+  cloud:
+    vault:
+      uri: http://localhost:8200
+      authentication: APPROLE
+
+      app-role:
+        role-id: ${VAULT_ROLE_ID}
+        secret-id: ${VAULT_SECRET_ID}
+
+      kv:
+        backend: secrets
+        version: 2
+        default-context: ""     # on désactive 'application'
+        lifecycle:
+          enabled: false        # secrets statiques
+
+      generic:
+        enabled: true
+        application-name:
+          - AP0001/${spring.profiles.active}/database
+          - AP0001/${spring.profiles.active}/api
+ ````
+
+
+### NOTES : 
+
+1. `bootstrap.yml` is no longer used in Spring Boot 3, because it is deprecated, we use `application.yml` instead. 
+2. Only in Spring 2, you can use the `bootstrap.yml` file. 
+- `bootstrap.yml` was loaded before `application.yml`
+- Used for Spring Cloud configuration (Vault, Config Server, etc.)
+3. 
+```php-template
+<backend>/<context>
+```
+### Example for Spring 2: 
+
+Exemple of config in `bootstrap.yml` (in Spring 2 is **Mondatory**):
+
+```yaml
+spring:
+  application:
+    name: AP0001
+
+  cloud:
+    vault:
+      uri: http://localhost:8200
+      authentication: APPROLE
+
+      app-role:
+        role-id: ${VAULT_ROLE_ID}
+        secret-id: ${VAULT_SECRET_ID}
+
+      kv:
+        enabled: true
+        backend: secrets
+        version: 2
+        application-name: AP0001/dev/database
+        default-context: ""
+```
+Exemple of config in `application.yml`:
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/test
+    username: ${username}
+    password: ${password}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+```
+
 ## Infrastructure as Code (IaC) with Terraform
 
 We use **Terraform** to apply this configuration automatically. Terraform spins up as a Docker container, talks to Vault, applies the `.tf` files, and then exits.
