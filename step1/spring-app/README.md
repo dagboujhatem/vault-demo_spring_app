@@ -566,7 +566,6 @@ securityContext:
   fsGroup: 1001
 ```
 
-
 ## Memory optimization for Spring containers
 
 Running Spring Boot inside containers requires explicit JVM tuning, otherwise the JVM may:
@@ -579,20 +578,96 @@ This guide shows recommended approaches for Docker and Kubernetes.
 
 ### 1. The Golden Rule (Java 11+ / Java 17)
 
+Always set container-aware JVM options to ensure the JVM respects the container's memory and CPU limitations. These
+options are enabled by default in Java 11+:
+
+- `-XX:+UseContainerSupport` (enabled by default in Java 11+)
+- `-XX:MaxRAMPercentage=75.0` (uses 75% of container's memory)
+
 ### 2. Recommended JVM Options (Best Practice)
+
+Configure additional JVM options for optimal performance in containers:
+
+```text
+-XX:+UseG1GC
+-XX:InitialRAMPercentage=50.0
+-XX:MaxRAMPercentage=75.0
+-XX:MinRAMPercentage=50.0
+-XX:+AlwaysPreTouch
+```
 
 ### 3. Kubernetes Resource Configuration (Mandatory)
 
+Set resource limits and requests in Kubernetes to prevent overcommitting container resources:
+
+```yaml
+resources:
+  requests:
+    memory: "512Mi"
+    cpu: "500m"
+  limits:
+    memory: "1024Mi"
+    cpu: "1000m"
+```
+
+Ensure that the memory limits align with JVM tuning parameters to avoid unexpected behavior.
+
 ### 4. Avoid These Anti-Patterns 🚫
+
+- Do not rely on default JVM behavior for memory allocation.
+- Avoid setting fixed heap sizes (`-Xmx`) without adjusting for container memory limits.
+- Do not use aggressive GC tunings unless necessary; use G1GC with default settings for most cases.
 
 ### 5. When JAVA_OPTS Is Still Useful
 
+Use `JAVA_OPTS` during runtime to inject additional JVM parameters dynamically. Example:
+
+```shell
+export JAVA_OPTS="-Dspring.profiles.active=prod -XX:+HeapDumpOnOutOfMemoryError -Xms256m -Xmx512m"
+```
+
 ### 6. Spring Boot–Specific Memory Tips
+
+- Enable lazy initialization to reduce startup memory usage:
+  ```yaml
+  spring.main.lazy-initialization: true
+  ```
+- Configure actuator endpoints to monitor memory usage:
+  ```yaml
+  management.endpoints.web.exposure.include: health, metrics
+  ```
+- Use Spring Boot's built-in statistics for GC and heap monitoring.
 
 ### 7. Native Memory Tracking (Optional)
 
+Enable JVM's Native Memory Tracking (NMT) to debug memory usage:
+
+```text
+-XX:NativeMemoryTracking=summary
+-XX:+PrintNMTStatistics
+```
+
 ### 8. Minimal Recommended Setup (Production)
+
+```shell
+-Xms256m -Xmx512m
+-XX:+UseG1GC
+-XX:MaxRAMPercentage=75.0
+-Dspring.profiles.active=prod
+```
 
 ### 9. Quick Checklist ✅
 
-### 10. Actuator endpoinds for Memory optimization
+- [ ] Use `-XX:MaxRAMPercentage` instead of fixed `-Xmx`.
+- [ ] Ensure Kubernetes resource limits match JVM memory settings.
+- [ ] Monitor memory usage using Spring Actuator or external tools like Prometheus + Grafana.
+- [ ] Test application scaling under real-world load scenarios.
+
+### 10. Actuator endpoints for Memory optimization
+
+Use Spring Boot Actuator to expose key metrics:
+
+- `GET /actuator/metrics/jvm.memory.used`: Displays used JVM memory.
+- `GET /actuator/metrics/jvm.memory.max`: Shows maximum JVM memory.
+- `GET /actuator/metrics/process.uptime`: Shows the uptime of the application.
+- Configure custom monitoring tools to consume these endpoints for in-depth analysis.
