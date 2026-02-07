@@ -65,7 +65,9 @@ if you have this database config in vault :
 to see the secrets loaded by vault, you can use the following URL (only for dev environment): 
 
 ```bash
-http://localhost:8080/actuator/vault
+http://localhost:8080/actuator/env
+# OR
+http://localhost:8080/actuator/configprops
 ```
 
 To activate the debug mode, you can add the following property : 
