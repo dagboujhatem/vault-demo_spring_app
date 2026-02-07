@@ -26,7 +26,18 @@ After getting the **token**, the application can send the token to the Vault to 
 
 ![Spring Vault Static Secrets](screenshots/spring-vault-static-secrets.png)
 
+### Available Options:
 
+1. **Option 1: Many secrets in the same path (simple)**  
+   In this option, a single path is used to access secrets in Vault.
+
+2. **Option 2: One secret per path (multi-contexts)**  
+   This option allows managing multiple secrets by accessing different paths at the same time.
+
+3. **Option 3: Multi-env + multi-secrets (Best Practices)**  
+   This option is ideal for managing secrets across multiple environments (e.g., dev, prod) and multiple paths.
+
+We have a total of **3 options** available for loading secrets from Vault.
 ### Option 1: Many secrets in the same path (simple)
 
 In this case, we will have **only one path** to read the secrets from Vault. 
@@ -65,8 +76,9 @@ if you have this database config in vault :
 to see the secrets loaded by vault, you can use the following URL (only for dev environment): 
 
 ```bash
+# To see the env variables (injected by Spring Cloud Vault)
 http://localhost:8080/actuator/env
-# OR
+# OR (NOTE: values are masked as ***)
 http://localhost:8080/actuator/configprops
 
 # Additional configuration to see the secrets loaded by vault

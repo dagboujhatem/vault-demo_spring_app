@@ -26,6 +26,81 @@ After getting the **token**, the application can send the token to the Vault to 
 
 ![Spring Vault Dynamic Secrets](screenshots/spring-vault-dynamic-secrets.png)
 
+
+
+### Option 1: without Spring profiles (simple configuration)
+
+In this case, we will have **only one path** to read the secrets from Vault. 
+
+**Example :** if you have this path `secrets/data/AP0001/database`, you can use the following config :
+
+```yaml
+spring:
+  cloud:
+    vault:
+      kv:
+        backend: secrets
+        application-name: AP0001/database
+        default-context: ""
+ ````
+
+ You can use it simply like this : 
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/test?:5432/${POSTGRES_DB:test}
+    username: ${username}
+    password: ${password}
+```
+
+if you have this database config in vault : 
+
+```json
+{
+    "username": "user",
+    "password": "password"
+}
+```
+### Option 2: use Spring profiles (best practice)
+
+
+
+### Debug Spring Cloud Vault communication & variables injection :
+
+to see the secrets loaded by vault, you can use the following URL (only for dev environment): 
+
+```bash
+# To see the env variables (injected by Spring Cloud Vault)
+http://localhost:8080/actuator/env
+# OR (NOTE: values are masked as ***)
+http://localhost:8080/actuator/configprops
+
+# Additional configuration to see the secrets loaded by vault
+# Actuator endpoints
+http://localhost:8080/actuator
+# Actuator health 
+http://localhost:8080/actuator/health
+```
+
+To activate the debug mode, you can add the following property : 
+
+```yaml
+# Activate log TRACE
+logging:
+  level:
+    org.springframework.web.client: TRACE
+```
+
+or the following environment variable (in K8S): 
+
+```yaml
+# Activate log TRACE in K8S environment
+env:
+  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB_CLIENT
+    value: TRACE
+```
+
 ## Infrastructure as Code (IaC) with Terraform
 
 We use **Terraform** to apply this configuration automatically. Terraform spins up as a Docker container, talks to Vault, applies the `.tf` files, and then exits.
