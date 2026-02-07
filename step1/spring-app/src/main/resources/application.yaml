@@ -18,8 +18,8 @@ spring:
         # Nom du mount KV v2 dans Vault (ex: secrets/)   
         backend: secrets
         # Chemin logique du secret dans Vault
-        # → secrets/data/AP0001/database
-        application-name: AP0001/database 
+        # → secrets/data/AP0001/database/creds
+        application-name: AP0001/database/creds
         # Désactive le contexte 'application' par défaut
         # (sinon Spring tenterait aussi de lire secrets/application)
         default-context: ""
@@ -34,8 +34,8 @@ spring:
   # POSTGRES_HOST, POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/${POSTGRES_DB:test}
-    username: ${username:user}
-    password: ${password:password}
+    username: ${username}
+    password: ${password}
     driver-class-name: org.postgresql.Driver
 
   # JPA Configuration
@@ -75,3 +75,10 @@ springdoc:
 logging:
   level:
     org.springframework.web.client: TRACE
+
+# Actuator Configuration
+# management:
+#   endpoints:
+#     web:
+#       exposure:
+#         include: "env"

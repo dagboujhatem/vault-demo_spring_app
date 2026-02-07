@@ -43,6 +43,49 @@ spring:
         default-context: ""
  ````
 
+ You can use it simply like this : 
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/test?:5432/${POSTGRES_DB:test}
+    username: ${username}
+    password: ${password}
+```
+
+if you have this database config in vault : 
+
+```json
+{
+    "username": "user",
+    "password": "password"
+}
+```
+
+to see the secrets loaded by vault, you can use the following URL (only for dev environment): 
+
+```bash
+http://localhost:8080/actuator/vault
+```
+
+To activate the debug mode, you can add the following property : 
+
+```yaml
+# Activate log TRACE
+logging:
+  level:
+    org.springframework.web.client: TRACE
+```
+
+or the following environment variable (in K8S): 
+
+```yaml
+# Activate log TRACE in K8S environment
+env:
+  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB_CLIENT
+    value: TRACE
+```
+
 ### Option 2: One secret per path (multi-contexts)
 
 If you have many secrets to loaded, you can use the `generic.application-name` to access to many path in the same time.
@@ -130,10 +173,27 @@ spring:
 2. Only in Spring 2, you can use the `bootstrap.yml` file. 
 - `bootstrap.yml` was loaded before `application.yml`
 - Used for Spring Cloud configuration (Vault, Config Server, etc.)
-3. 
+3. Spring Cloud Vault load the from KV from the path `<backend>/data/<context>` : 
 ```php-template
 <backend>/<context>
 ```
+4. In Spring Cloud Vault, the <context> is: The logical name of the Vault secret that Spring is instructed to load. Spring determines contexts from (in this order):
+  - the `default-context` → defaults to `application.yml` or `application.properties`
+  - the `application-name`: 
+  - the generic application name: `generic.application-name` or `SPRING_CLOUD_VAULT_GENERIC_APPLICATION_NAME=billing-service` or `--spring.cloud.vault.generic.application-name=billing-service`
+  - the application name (fallback) : `spring.application.name` or `SPRING_APPLICATION_NAME=billing-service` or `--spring.application.name=billing-service`
+5. The `default-context: ""` helps avoid unexpected access to `application` path in Vault.
+
+6. The Spring Cloud Vault load the secrets from the path `<backend>/data/<context>`, and by défault we have the following paths to load the secrets : 
+```shell 
+/secret/{application}/{profile}
+/secret/{application}
+/secret/{default-context}/{profile}
+/secret/{default-context}
+```
+
+for more details : [Spring Cloud Vault - Config & REST endpoint](https://cloud.spring.io/spring-cloud-vault/reference/html/#vault.config.backends.kv.versioned)
+
 ### Example for Spring 2: 
 
 Exemple of config in `bootstrap.yml` (in Spring 2 is **Mondatory**):
@@ -172,6 +232,65 @@ spring:
     hibernate:
       ddl-auto: update
 ```
+### REX – Spring Cloud Vault path resolution
+
+#### Context
+
+We were using Spring Cloud Vault (KV v2) with secrets organized under nested paths, for example:
+```bash
+secrets/data/ap9833/application
+```
+The expectation was that Spring would automatically load this secret.
+
+#### Issue
+Spring Cloud Vault did **not load the secret**, resulting in **missing properties** at startup.
+
+No error occurred, but the secret was simply ignored.
+
+#### Root Cause
+
+Spring Cloud Vault does not recurse into sub-paths.
+
+By default, it only loads secrets using the pattern:
+
+```php-template
+<backend>/data/<context>
+```
+
+It **will never automatically read**:
+
+```php-template
+<backend>/data/<context>/<sub-path>
+```
+So this path:
+
+```php-template
+<backend>/data/<context>/<sub-path>
+```
+
+is **not loaded** unless explicitly declared as a context.
+
+#### Solution
+
+The sub-path must be explicitly configured as a Vault context in Spring.
+
+Example: 
+```yaml
+spring:
+  cloud:
+    vault:
+      kv:
+        backend: secrets
+        application-name: ap9833/application
+        default-context: ""
+```
+
+This forces Spring to read:
+
+```shell
+secrets/data/ap9833/application
+```
+
 
 ## Infrastructure as Code (IaC) with Terraform
 
