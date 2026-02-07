@@ -26,4 +26,7 @@ COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
 
 # Démarrage direct de Spring Boot
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Option 1️⃣ — Simple ENTRYPOINT (No JVM tuning)
+#  ENTRYPOINT ["java", "-jar", "app.jar"]
+# Option 2️⃣ — ENTRYPOINT with JAVA_OPTS (JVM tuning support)
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

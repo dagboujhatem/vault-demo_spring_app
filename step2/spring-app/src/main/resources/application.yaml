@@ -7,7 +7,7 @@ spring:
   # Spring Cloud Vault
   cloud:
     vault:
-      uri: http://localhost:8200
+      uri: ${VAULT_ADDR:http://localhost:8200}
       authentication: APPROLE
       app-role:
         role-id: ${VAULT_ROLE_ID}
@@ -46,15 +46,6 @@ spring:
         enabled: true
         role: ${VAULT_DATABASE_ROLE}
         backend: ${VAULT_DATABASE_BACKEND}
-# Actuator Configuration
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always
 
 # Swagger/OpenAPI Configuration
 springdoc:
@@ -70,7 +61,20 @@ springdoc:
     doc-expansion: none
   show-actuator: true
 
-# Activate log
+# Activate log TRACE
 logging:
   level:
     org.springframework.web.client: TRACE
+    org.springframework.cloud.vault: TRACE
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    env:
+        show-values: ALWAYS

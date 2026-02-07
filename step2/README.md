@@ -15,7 +15,14 @@ This step use Hashicorp Vault dynamic secrets with database. This includes:
 
 ## How it works
 
-Each time you will go to the website, the application will use a new couple user/password for database access.
+To login to Vault using AppRole authentication method, we need to create a role and provide the RoleID and SecretID to the application. In this step, we will use static secrets (RoleID and SecretID) to login to Vault. 
+
+In the following schema, the Vault admin can create the role and policy, and the application can use the **RoleID** and **SecretID** to login to Vault. Vault returns a token to the application, and the application can use the token to get the database credentials.
+
+![Spring Vault AppRole](screenshots/vault-approle-workflow.avif)
+
+
+After getting the **token**, the application can send the token to the Vault to get the database credentials from the **dynamic secret engine**.
 
 ![Spring Vault Dynamic Secrets](screenshots/spring-vault-dynamic-secrets.png)
 
@@ -28,41 +35,12 @@ Terraform will output the role_id and secret_id that we need to use in our appli
 We will use the following commands to apply the configuration and extract the role_id and secret_id if you need to do it manually:
 
 ```bash
-# Terraform version
-terraform version
-
-# Terraform init
-terraform init
-
-# Terraform fmt
-terraform fmt
-
-# Terraform validate
-terraform validate
-
-# Terraform plan
-terraform plan
-# OR
-terraform plan -var-file="terraform.tfvars"
-
-# Terraform apply
-terraform apply -auto-approve
-# OR
-terraform apply -auto-approve -var-file="terraform.tfvars"
-
 # Terraform extract role_id and secret_id from terraform output
 terraform output -raw role_id
 terraform output -raw secret_id
-
-# Terraform destroy 
-terraform destroy -auto-approve
-# OR
-terraform destroy -auto-approve -var-file="terraform.tfvars"
-
-# Terraform State rm (role "role-web" does not exist)
-terraform state rm vault_approle_auth_backend_role_secret_id.id
 ```
-For more information, see the [Terraform documentation](https://www.terraform.io/docs/index.html).
+
+For more information, see the [IaC Terraform Vault](./terraform/README.md).
 
 ## Run it
 

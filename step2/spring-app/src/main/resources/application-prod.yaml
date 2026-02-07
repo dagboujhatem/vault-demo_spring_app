@@ -23,8 +23,8 @@ spring:
       uri: ${VAULT_ADDR:http://localhost:8200}
       authentication: APPROLE
       app-role:
-        role-id: ${VAULT_ROLE_ID}
-        secret-id: ${VAULT_SECRET_ID}
+        role-id: ${VAULT_ROLE_ID:15dd3864-8891-4985-22ef-914870e2aaef}
+        secret-id: ${VAULT_SECRET_ID:64b4b4d2-afc4-f0c0-dd6d-87cd32492424}
       database:
         enabled: true
         role: ${VAULT_DATABASE_ROLE}
@@ -37,3 +37,21 @@ springdoc:
     enabled: true
   swagger-ui:
     enabled: true
+
+# Activate log TRACE
+logging:
+  level:
+    org.springframework.web.client: TRACE
+    org.springframework.cloud.vault: TRACE
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    env:
+        show-values: ALWAYS
