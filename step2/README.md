@@ -160,6 +160,15 @@ The application configures its database connection (e.g., JDBC) with these crede
 
 ## Implementation in Spring 
 
+### Available Options:
+
+1. **Option 1: without Spring profiles (simple configuration)**  
+   In this option, a single path (single environment) is used to access secrets in Vault.
+
+2. **Option 2: use Spring profiles (best practice)**  
+   This option allows managing multiple environments (dev, test, prod) by accessing different paths in Vault when we need to change the environment.
+
+We have a total of **2 options** available for loading secrets from Vault.
 
 ### Option 1: without Spring profiles (simple configuration)
 
@@ -197,7 +206,112 @@ if you have this database config in vault :
 ```
 ### Option 2: use Spring profiles (best practice)
 
+In this option, Spring profiles enable using multiple paths in Vault for managing secrets across multiple environments (
+e.g., dev, test, prod). By combining Spring profiles with Vault paths, you can seamlessly switch between environments
+without modifying core configurations.
 
+#### Example:
+
+If you have the following Vault path structure:
+
+- **Dev environment**: `secrets/data/dev/AP0001/database`
+- **Test environment**: `secrets/data/test/AP0001/database`
+- **Prod environment**: `secrets/data/prod/AP0001/database`
+
+You can use Spring profiles to load these paths dynamically based on the environment.
+
+#### Configuration Example:
+
+1. **Base Configuration (application.yaml):**
+
+```yaml
+spring:
+  cloud:
+    vault:
+      kv:
+        backend: secrets
+        application-name: AP0001/database
+      default-context: ""
+```
+
+2. **Dev Profile (application-dev.yaml):**
+
+```yaml
+spring:
+  cloud:
+    vault:
+      kv:
+        profile-separator: "/"
+        profiles: dev
+```
+
+3. **Test Profile (application-test.yaml):**
+
+```yaml
+spring:
+  cloud:
+    vault:
+      kv:
+        profile-separator: "/"
+        profiles: test
+```
+
+4. **Prod Profile (application-prod.yaml):**
+
+```yaml
+spring:
+  cloud:
+    vault:
+      kv:
+        profile-separator: "/"
+        profiles: prod
+```
+
+#### Important Notes:
+
+- By configuring profiles as shown, Spring will load secrets from Vault paths like
+  `secrets/data/<profile>/AP0001/database`, where `<profile>` corresponds to the active Spring profile (e.g., `dev`,
+  `test`, `prod`).
+- The active profile can be set with the `spring.profiles.active` property, such as using the following in the
+  `application.properties` file or environment variables:
+
+```properties
+spring.profiles.active=dev
+```
+
+Alternatively, you can pass this as a JVM argument:
+
+```bash
+-Dspring.profiles.active=prod
+```
+
+With this setup, switching environments is as simple as setting the appropriate profile, and Vault dynamically loads the
+corresponding secrets.
+
+#### Debugging and Validation
+
+To troubleshoot or validate if Vault secrets load correctly, you can enable logging and check the values injected by
+Spring Cloud Vault:
+
+1. **Activate Debug Logging:**
+
+```yaml
+logging:
+  level:
+    org.springframework.cloud.vault: TRACE
+```
+
+2. **Verify Injected Secrets via Actuator:**
+
+Access the Spring Actuator endpoints:
+
+- **Environment Variables (Secrets):** `http://localhost:8080/actuator/env`
+- **Configuration Properties:** `http://localhost:8080/actuator/configprops`
+
+These endpoints will show the secrets retrieved from Vault (values masked as `***` for security).
+
+This approach allows for a scalable and more secure configuration management workflow while supporting multiple
+environments.
 
 ### Debug Spring Cloud Vault communication & variables injection :
 
