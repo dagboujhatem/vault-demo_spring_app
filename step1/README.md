@@ -309,41 +309,12 @@ Terraform will output the role_id and secret_id that we need to use in our appli
 We will use the following commands to apply the configuration and extract the role_id and secret_id if you need to do it manually:
 
 ```bash
-# Terraform version
-terraform version
-
-# Terraform init
-terraform init
-
-# Terraform fmt
-terraform fmt
-
-# Terraform validate
-terraform validate
-
-# Terraform plan
-terraform plan
-# OR
-terraform plan -var-file="terraform.tfvars"
-
-# Terraform apply
-terraform apply -auto-approve
-# OR
-terraform apply -auto-approve -var-file="terraform.tfvars"
-
 # Terraform extract role_id and secret_id from terraform output
 terraform output -raw role_id
 terraform output -raw secret_id
-
-# Terraform destroy 
-terraform destroy -auto-approve
-# OR
-terraform destroy -auto-approve -var-file="terraform.tfvars"
-
-# Terraform State rm (role "role-web" does not exist)
-terraform state rm vault_approle_auth_backend_role_secret_id.id
 ```
-For more information, see the [Terraform documentation](https://www.terraform.io/docs/index.html).
+
+For more information, see the [IaC Terraform Vault](./terraform/README.md).
 
 ## Run it
 
