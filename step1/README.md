@@ -68,6 +68,12 @@ to see the secrets loaded by vault, you can use the following URL (only for dev 
 http://localhost:8080/actuator/env
 # OR
 http://localhost:8080/actuator/configprops
+
+# Additional configuration to see the secrets loaded by vault
+# Actuator endpoints
+http://localhost:8080/actuator
+# Actuator health 
+http://localhost:8080/actuator/health
 ```
 
 To activate the debug mode, you can add the following property : 

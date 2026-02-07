@@ -7,7 +7,7 @@ spring:
   # Spring Cloud Vault
   cloud:
     vault:
-      uri: http://localhost:8200
+      uri:  ${VAULT_ADDR:http://localhost:8200}
       authentication: APPROLE
       app-role:
         role-id: ${VAULT_ROLE_ID:15dd3864-8891-4985-22ef-914870e2aaef}
@@ -31,7 +31,7 @@ spring:
 
   # Database Configuration (PostgreSQL)
   # These values can be overridden by environment variables:
-  # POSTGRES_HOST, POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD
+  # POSTGRES_HOST, POSTGRES_DB, username, password
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/${POSTGRES_DB:test}
     username: ${username}
@@ -46,16 +46,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
-# Actuator Configuration
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always
 
 # Swagger/OpenAPI Configuration
 springdoc:
@@ -75,10 +65,16 @@ springdoc:
 logging:
   level:
     org.springframework.web.client: TRACE
+    org.springframework.cloud.vault: TRACE
 
 # Actuator Configuration
-# management:
-#   endpoints:
-#     web:
-#       exposure:
-#         include: "env"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    env:
+        show-values: ALWAYS

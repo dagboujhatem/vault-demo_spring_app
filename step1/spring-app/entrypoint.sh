@@ -5,6 +5,9 @@ set -e
 VAULT_ADDR=${VAULT_ADDR:-"http://vault:8200"}
 VAULT_ROLE_ID=${VAULT_ROLE_ID}
 VAULT_SECRET_ID=${VAULT_SECRET_ID}
+
+# Vault KV v2 
+VAULT_API_PATH=${VAULT_API_PATH:-"kvv2"}
 VAULT_APP_CODE=${VAULT_APP_CODE:-"AP0001"}
 VAULT_ENV=${VAULT_ENV:-"dev"}
 VAULT_SECRET_NAME=${VAULT_SECRET_NAME:-"database-secret-v2"}
@@ -12,6 +15,7 @@ VAULT_SECRET_NAME=${VAULT_SECRET_NAME:-"database-secret-v2"}
 echo "--- Vault Integration ---"
 echo "Vault Address: $VAULT_ADDR"
 echo "Role ID: $VAULT_ROLE_ID"
+echo "Vault API path: $VAULT_API_PATH"
 echo "App Code: $VAULT_APP_CODE"
 echo "Environment: $VAULT_ENV"
 
@@ -35,7 +39,7 @@ echo "Successfully authenticated with Vault."
 
 # 2. Fetch secrets
 echo "Fetching secrets from Vault..."
-SECRET_PATH="kvv2/data/$VAULT_APP_CODE/$VAULT_ENV/$VAULT_SECRET_NAME"
+SECRET_PATH="$VAULT_API_PATH/data/$VAULT_APP_CODE/$VAULT_ENV/$VAULT_SECRET_NAME"
 SECRET_RESPONSE=$(curl -s -H "X-Vault-Token: $VAULT_TOKEN" $VAULT_ADDR/v1/$SECRET_PATH)
 
 # Check if secret was found
