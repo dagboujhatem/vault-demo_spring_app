@@ -26,6 +26,139 @@ After getting the **token**, the application can send the token to the Vault to 
 
 ![Spring Vault Dynamic Secrets](screenshots/spring-vault-dynamic-secrets.png)
 
+### Step-by-Step Breakdown of the Dynamic Secret Retrieval Process
+
+**Step 1: Configure Vault Server**
+
+- Set up the **Vault Server**:
+    - Install and initialize HashiCorp Vault.
+    - Store the initial root token securely.
+    - Enable HTTPS or setup Vault for development mode (not recommended for production).
+
+---
+
+**Step 2: Enable Authentication and Secrets Engines**
+
+- **Enable AppRole Authentication**:
+    - Use the following commands to enable AppRole authentication on Vault:
+
+      ```bash
+      vault auth enable approle
+      ```
+
+- **Enable the Database Secrets Engine**:
+    - Configure the database secrets backend (example for PostgreSQL):
+
+      ```bash
+      vault secrets enable database
+      vault write database/config/my-database \
+        plugin_name=postgresql-database-plugin \
+        allowed_roles="my-role" \
+        connection_url="postgresql://{{username}}:{{password}}@db-host:5432/mydb?sslmode=disable" \
+        username="db-admin" \
+        password="secure-password"
+      ```
+
+---
+
+**Step 3: Create Policies and Roles**
+
+1. **Create Vault Policies**:
+    - Define a policy that allows the application to access the database credentials.
+
+    ```hcl
+    path "database/creds/my-role" {
+      capabilities = ["read"]
+    }
+    ```
+
+   Apply the policy:
+
+    ```bash
+    vault policy write my-policy my-policy.hcl
+    ```
+
+2. **Create AppRole Role**:
+    - Map the policy to an AppRole:
+
+    ```bash
+    vault write auth/approle/role/my-role \
+      policies="my-policy" \
+      token_ttl=1h \
+      token_max_ttl=4h
+    ```
+
+   Fetch the RoleID and SecretID:
+
+    ```bash
+    vault read auth/approle/role/my-role/role-id
+    vault write -f auth/approle/role/my-role/secret-id
+    ```
+
+---
+
+**Step 4: Application Obtains a Vault Token**
+
+- The Spring Boot application starts by authenticating to Vault using **AppRole authentication**.
+    - The application provides the `RoleID` and `SecretID` to Vault.
+    - Vault verifies these static credentials and generates a **token** for the application.
+    - This token has a limited Time-To-Live (TTL) and is used for further communication with Vault.
+
+**Step 5: Application Uses the Vault Token to Request Database Credentials**
+
+- After obtaining the token, the application uses this token to make a request to the Vault server.
+- Vault dynamically creates **database credentials** (username and password) for the application by connecting to the
+  database via the **Database Secrets Engine**.
+- The credentials generated:
+    - Have their own specified **lease duration** (TTL).
+    - Can only be used by the application within their lease period.
+
+**Step 6: Vault Sends Database Credentials to the Application**
+
+- Vault sends back the **dynamically generated credentials** (e.g., username and password) to the application along with
+  additional lease information:
+    - **Lease TTL**: The amount of time the credentials are valid.
+    - **Renewable Status**: Indicates whether the application can renew the lease if needed before it expires.
+
+The application configures its database connection (e.g., JDBC) with these credentials.
+
+---
+
+### Vault’s Role in Managing Lease, TTL, and Renewability
+
+1. **Lease Management**:
+    - Vault ensures that the generated credentials are **temporary** and valid only for the defined lease period.
+    - Vault stores metadata about these credentials (e.g., TTL, database policy, generated credentials) and monitors
+      their leases.
+
+2. **Time-To-Live (TTL)**:
+    - Vault assigns a specific TTL to the generated credentials.
+    - After this TTL period, the credentials are automatically invalidated in the database.
+
+3. **Renewable Leases**:
+    - If enabled, the Vault token or dynamic credentials can be renewed before they expire.
+    - **Renewal Process**:
+        - The application sends a renewal request to Vault with the token or lease ID.
+        - Vault verifies the lease and extends its validity if allowed by the policy.
+
+4. **Automatic Revocation**:
+    - When the lease TTL expires or if an application revokes a lease prematurely, Vault automatically invalidates the
+      credentials.
+    - This ensures enhanced security by preventing unused or stale credentials from being active.
+
+---
+
+### Summary:
+
+- **Step 4**: The application authenticates using AppRole and gets a token.
+- **Step 5**: The token is used to request dynamic database credentials.
+- **Step 6**: Vault generates and returns credentials with lease and TTL information.
+- Vault manages the lifecycle of these credentials using the lease, TTL, and revocation mechanisms while providing
+  renewability options for dynamic secrets where needed.
+
+---
+
+## Implementation in Spring 
 
 
 ### Option 1: without Spring profiles (simple configuration)
