@@ -13,11 +13,11 @@
 - **Terraform**: A tool for building, changing, and versioning infrastructure as code.
 - **Vault**: A tool for secrets management, encryption, and authentication.
 - **Docker**: A tool for containerization and orchestration.
-- **PostgreSQL**: A database management system.
+- **Elasticsearch**: A database management system.
 
-##  Prepare your database PostgreSQL
+##  Prepare your database Elasticsearch
 
-To prepare your database PostgreSQL, you need to create a user with the necessary permissions.
+To prepare your database Elasticsearch, you need to create a user with the necessary permissions.
 
 ```sql
 -- Step 1. Verify if the user named 'user' has permissions to create roles and super user:
@@ -92,36 +92,7 @@ chmod +x vault-verif.sh
 ./vault-verif.sh
 ```
 
-Also, you can verify database connection
 
-```sql
--- Verify whether Vault-generated PostgreSQL roles have a password set
--- (rolpassword is stored as a hash, not in plain text)
-SELECT
-  rolname,
-  rolpassword IS NOT NULL AS has_password
-FROM pg_authid
-WHERE rolname LIKE 'v-token-%';
-
--- Inspect the actual password hash used for authentication
--- Expected values:
---  - SCRAM-SHA-256$...  → correct (modern PostgreSQL default)
---  - NULL               → authentication will fail
-SELECT
-  rolname,
-  rolpassword
-FROM pg_authid
-WHERE rolname LIKE 'v-token-%';
-
--- Check the expiration timestamp of Vault-generated roles
--- rolvaliduntil indicates when Vault will revoke the role
-SELECT
-  rolname,
-  rolvaliduntil
-FROM pg_roles
-WHERE rolname LIKE 'v-token-%'
-ORDER BY rolvaliduntil DESC;
-```
 
 ## References 
 

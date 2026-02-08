@@ -1,0 +1,58 @@
+version: '3'
+
+services:
+  # Vault container
+  vault:
+    image: vault:1.11.2
+    container_name: ${VAULT_HOST}
+    environment:
+      - VAULT_DEV_ROOT_TOKEN_ID=${VAULT_DEV_ROOT_TOKEN_ID}
+    ports:
+      - "8200:8200"
+    cap_add:
+      - IPC_LOCK
+  # Spring Boot application containers
+  spring-app-default:
+    build: 
+      context: ./spring-app
+      dockerfile: dockerfile
+    container_name: spring-app-default
+    environment:
+      # Spring Profile
+      # - SPRING_PROFILES_ACTIVE=prod
+      # Elasticsearch
+      - ES_PASSWORD=${ES_PASSWORD}
+      # Vault Auth (Spring Cloud Vault)
+      - VAULT_ADDR=${VAULT_ADDR}
+      - VAULT_ROLE_ID=${VAULT_ROLE_ID}
+      - VAULT_SECRET_ID=${VAULT_SECRET_ID}
+    depends_on:
+      - db
+      - vault
+    ports:
+      - "8080:8080"
+  # Elasticsearch container
+  db:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2
+    container_name: elasticsearch
+    restart: unless-stopped
+    environment:
+      - node.name=${ES_NODE_NAME}
+      - cluster.name=${ES_CLUSTER_NAME}
+      - discovery.type=${ES_DISCOVERY_TYPE}
+
+      # Security (enabled by default in ES 8)
+      - xpack.security.enabled=${ES_ENABLED_SECURITY}
+      - ELASTIC_PASSWORD=${ES_PASSWORD}
+
+      # JVM tuning
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
+# Volumes
+volumes:
+  es_data:

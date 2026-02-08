@@ -4,11 +4,12 @@ spring:
   # Spring Config
   config:
     import: optional:vault://
-#    import: vault://
   # Spring Cloud Vault
   cloud:
     vault:
       uri: ${VAULT_ADDR:http://localhost:8200}
+#      authentication: TOKEN
+#      token: root
       authentication: APPROLE
       app-role:
         role-id: ${VAULT_ROLE_ID:6b0b471a-275b-33eb-9c50-06bf2e609fad}
