@@ -30,6 +30,12 @@ spring:
         # Active le mécanisme de lease/refresh
         lifecycle:
           enabled: true
+          # Renew leases before they expire
+          min-renewal: 10s
+          # Grace period before expiry to trigger renewal
+          expiry-threshold: 1m
+          # How to handle lease renewal failures
+          lease-endpoints: SysLeases
 
   # Database Configuration (PostgreSQL)
   datasource:

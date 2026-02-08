@@ -49,13 +49,14 @@ variable "db_port" {
   description = "Database port"
 }
 
-# Vault Token TTL 
+# Vault Token Max TTL (in seconds : 86400 = 1 day) 
 variable "token_max_ttl" {
-  default     = 600
-  description = "Max TTL is like equal to 10 minute"
+  default     = 86400
+  description = "Max TTL is like equal to 1 day"
 }
 
+# Vault Token Min TTL (in seconds : 3600 = 1 hour) 
 variable "db_secret_ttl" {
-  default     = 60
-  description = "TTL is like equal to 1 minute"
+  default     = 3600
+  description = "Min TTL is like equal to 1 hour"
 }
