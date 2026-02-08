@@ -8,6 +8,34 @@
 - **Vault Secrets Engine**: A secrets engine mounted in Vault to manage and store secrets.
 - **Vault Key-Value Pairs**: Key-value secrets stored in the secrets engine.
 
+## Prerequisites
+
+- **Terraform**: A tool for building, changing, and versioning infrastructure as code.
+- **Vault**: A tool for secrets management, encryption, and authentication.
+- **Docker**: A tool for containerization and orchestration.
+- **PostgreSQL**: A database management system.
+
+##  Prepare your database PostgreSQL
+
+To prepare your database PostgreSQL, you need to create a user with the necessary permissions.
+
+```sql
+-- Step 1. Verify if the user named 'user' has permissions to create roles and super user:
+-- 1. CREATE ROLE
+-- 2. Super user
+
+SELECT rolname, rolcreaterole, rolsuper
+FROM pg_roles
+WHERE rolname = 'user';
+
+-- Step 2. Create the user if it doesn't exist
+CREATE USER user WITH PASSWORD 'password';
+
+-- Step 3. Grant permissions to the user
+GRANT CREATE ROLE TO user;
+GRANT SUPERUSER TO user;
+```
+
 
 ## Infrastructure as Code (IaC) with Terraform (basic commands)
 
@@ -54,5 +82,18 @@ terraform state rm vault_approle_auth_backend_role_secret_id.id
 ```
 For more information, see the [Terraform documentation](https://www.terraform.io/docs/index.html).
 
+## Test dynamic secrets
 
+
+You can use the `vault-verif.sh` script to test the dynamic secrets.
+
+```bash
+chmod +x vault-verif.sh
+./vault-verif.sh
+```
+
+
+## References 
+
+- [Vault : Understand Static and Dynamic Secrets ](https://developer.hashicorp.com/vault/tutorials/get-started/understand-static-dynamic-secrets)
 

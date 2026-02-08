@@ -1,29 +1,48 @@
 spring:
   application:
-    name: vault-demo
+    name: spring-app
   # Spring Config
   config:
-    import: vault://
+    import: optional:vault://
+#    import: vault://
   # Spring Cloud Vault
   cloud:
     vault:
       uri: ${VAULT_ADDR:http://localhost:8200}
       authentication: APPROLE
       app-role:
-        role-id: ${VAULT_ROLE_ID}
-        secret-id: ${VAULT_SECRET_ID}
+        role-id: ${VAULT_ROLE_ID:6b0b471a-275b-33eb-9c50-06bf2e609fad}
+        secret-id: ${VAULT_SECRET_ID:35455c16-226c-8f11-0747-26e6c1232f07}
       kv:
+        enabled: false
+      generic:
         enabled: false
       database:
         enabled: true
-        role: ${VAULT_DATABASE_ROLE}
-        backend: ${VAULT_DATABASE_BACKEND}
+        backend: ${VAULT_DATABASE_BACKEND:database}
+        role: ${VAULT_DATABASE_ROLE:spring-app}
+        database-name: postgres-db
+        # Property names where credentials will be stored
+        username-property: spring.datasource.username
+        password-property: spring.datasource.password
+        # Active le rafraîchissement automatique des secrets
+        # Active le mécanisme de lease/refresh
+        lifecycle:
+          enabled: true
 
   # Database Configuration (PostgreSQL)
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/${POSTGRES_DB:test}
     # username and password will be provided by Spring Cloud Vault
     driver-class-name: org.postgresql.Driver
+    hikari:
+      # Wait
+      # initialization-fail-timeout: 0
+      maximum-pool-size: 5
+      minimum-idle: 1
+      idle-timeout: 10000
+      # Allow connection refresh when credentials rotate
+      max-lifetime: 30000      # 30s (MUST be < 60s TTL)
 
   # JPA Configuration
   jpa:
@@ -32,20 +51,8 @@ spring:
     show-sql: true
     properties:
       hibernate:
+        format-sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
-  # Vault Configuration
-  cloud:
-    vault:
-      uri: ${VAULT_ADDR:http://localhost:8200}
-      authentication: APPROLE
-      app-role:
-        role-id: ${VAULT_ROLE_ID}
-        secret-id: ${VAULT_SECRET_ID}
-      database:
-        enabled: true
-        role: ${VAULT_DATABASE_ROLE}
-        backend: ${VAULT_DATABASE_BACKEND}
 
 # Swagger/OpenAPI Configuration
 springdoc:
@@ -64,8 +71,11 @@ springdoc:
 # Activate log TRACE
 logging:
   level:
+#    com.zaxxer.hikari: DEBUG
+    org.springframework.vault.core.lease: TRACE
     org.springframework.web.client: TRACE
-    org.springframework.cloud.vault: TRACE
+    org.springframework.cloud.vault: DEBUG
+    org.springframework.vault: DEBUG
 
 # Actuator Configuration
 management:

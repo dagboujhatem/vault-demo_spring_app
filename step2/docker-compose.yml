@@ -92,4 +92,4 @@ services:
       - db
       - vault
     ports:
-      - "8081:8080"
+      - "8082:8080"

@@ -59,6 +59,7 @@ springdoc:
 # Activate log TRACE
 #logging:
 #  level:
+#    org.springframework.vault.core.lease: TRACE
 #    org.springframework.web.client: TRACE
 #    org.springframework.cloud.vault: TRACE
 
