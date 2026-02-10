@@ -9,6 +9,7 @@ import fr.bnpp.vaultdemo.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,10 +22,10 @@ public class UserService {
     private final UserMapper userMapper;
 
     public List<UserDTO> getAllUsers() {
-        return userRepository.findAll()
-                .stream()
-                .map(userMapper::toDTO)
-                .collect(Collectors.toList());
+        List<UserDTO> users = new ArrayList<>();
+        userRepository.findAll()
+                .forEach(user -> users.add(userMapper.toDTO(user)));
+        return users;
     }
 
     public Optional<UserDTO> getUserById(Integer id) {

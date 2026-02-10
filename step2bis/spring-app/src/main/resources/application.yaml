@@ -19,7 +19,7 @@ spring:
       generic:
         enabled: false
       database:
-        enabled: true
+        enabled: false
         backend: ${VAULT_DATABASE_BACKEND:database}
         role: ${VAULT_DATABASE_ROLE:spring-app}
         database-name: postgres-db
@@ -37,29 +37,12 @@ spring:
           # How to handle lease renewal failures
           lease-endpoints: SysLeases
 
-  # Database Configuration (PostgreSQL)
-  datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/${POSTGRES_DB:test}
-    # username and password will be provided by Spring Cloud Vault
-    driver-class-name: org.postgresql.Driver
-    hikari:
-      # Attendre la récupération du user/password from Vault
-      initialization-fail-timeout: 0
-      maximum-pool-size: 5
-      minimum-idle: 1
-      idle-timeout: 10000
-      # Allow connection refresh when credentials rotate
-      max-lifetime: 30000      # 30s (MUST be < 60s TTL)
+  # Database Configuration (elasticsearch)
+  elasticsearch:
+    uris: http://localhost:9200
+    username: elastic
+    password: password
 
-  # JPA Configuration
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format-sql: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 # Swagger/OpenAPI Configuration
 springdoc:
