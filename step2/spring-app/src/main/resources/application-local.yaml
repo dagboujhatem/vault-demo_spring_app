@@ -7,12 +7,12 @@ spring:
     compose:
       enabled: false
   main:
-    lazy-initialization: true
+    lazy-initialization: false
   application:
     name: spring-app
   # Spring Config
-#  config:
-#    import: optional:vault:// # Pas besoin pour les secrets dynamique
+  config:
+    import: vault://
   # Spring Cloud Vault
   cloud:
     vault:
@@ -32,7 +32,7 @@ spring:
         enabled: true
         backend: ${VAULT_DATABASE_BACKEND:database}
         role: ${VAULT_DATABASE_ROLE:spring-app}
-        database-name: postgres-db
+#        database-name: postgres-db
         # Property names where credentials will be stored
         username-property: spring.datasource.username
         password-property: spring.datasource.password
@@ -102,8 +102,8 @@ logging:
     org.springframework.boot.autoconfigure.jdbc: DEBUG
     org.springframework.vault.core.lease: DEBUG
     org.springframework.web.client: TRACE
-    org.springframework.cloud.vault: DEBUG
-    org.springframework.vault: DEBUG
+    org.springframework.cloud.vault: TRACE
+    org.springframework.vault: TRACE
     org.springframework.boot.context.config: DEBUG
 
 # Actuator Configuration
