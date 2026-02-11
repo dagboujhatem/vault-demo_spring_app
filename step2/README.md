@@ -104,6 +104,14 @@ After getting the **token**, the application can send the token to the Vault to 
     - Vault verifies these static credentials and generates a **token** for the application.
     - This token has a limited Time-To-Live (TTL) and is used for further communication with Vault.
 
+This schema shows the initial token exchange.
+
+![Spring Vault - Initial Token Exchange](screenshots/inital-token-exchange.webp)
+
+The application can refresh the token before it expires. The application can refresh the token by sending a request to Vault with the token. 
+
+![Spring Vault - Refresh Token](screenshots/refresh-token.webp)
+
 **Step 5: Application Uses the Vault Token to Request Database Credentials**
 
 - After obtaining the token, the application uses this token to make a request to the Vault server.
@@ -146,6 +154,9 @@ The application configures its database connection (e.g., JDBC) with these crede
       credentials.
     - This ensures enhanced security by preventing unused or stale credentials from being active.
 
+
+![Spring Vault - Postgres Dynamic Secrets](screenshots/vault-pg.webp)
+
 ---
 
 ### Summary:
@@ -181,9 +192,16 @@ spring:
   cloud:
     vault:
       kv:
-        backend: secrets
-        application-name: AP0001/database
-        default-context: ""
+        enabled: false
+      generic:
+        enabled: true
+        backend: secret
+      database:
+        enabled: true
+        backend: database
+        role: spring-app
+        username-property: spring.datasource.username
+        password-property: spring.datasource.password
  ````
 
  You can use it simply like this : 
@@ -192,18 +210,61 @@ spring:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/test?:5432/${POSTGRES_DB:test}
-    username: ${username}
-    password: ${password}
 ```
 
-if you have this database config in vault : 
+if you have multiple database config : 
 
-```json
-{
-    "username": "user",
-    "password": "password"
-}
+```yaml
+spring:
+  cloud:
+    vault:
+      kv:
+        enabled: false
+      generic:
+        enabled: true
+        backend: secret
+      databases:
+        app:
+          enabled: true
+          role: spring-app
+          backend: database
+          database-name: postgres-app
+        reporting:
+          enabled: true
+          role: spring-reporting
+          backend: database
+          database-name: postgres-reporting
 ```
+
+This config will load the secrets from Vault and use them to configure the database connection for each database.
+
+Please refer to the [Spring Cloud Vault documentation](https://docs.spring.io/spring-cloud-vault/docs/current/reference/html/index.html#vault.config.backends.databases) for more information.
+
+
+ **Note :**
+- The `databases` with `s` is a list of databases.
+- The `database` without `s` is a single database.
+- The `enabled` is a boolean that enables the database secrets engine.
+
+ **Details** : 
+- The `kv` is the key-value store in the database secrets engine.
+- The `generic` is the generic store in the database secrets engine.
+- The `database-name` is the name of the database in the database secrets engine.
+- The `role` is the name of the role in the database secrets engine.
+- The `backend` is the name of the backend in the database secrets engine.
+- The `username-property` and `password-property` are the properties in the application.yml file that will be used to store the username and password.
+- The `enabled` is a boolean that enables the database secrets engine.
+- The `application-name` is the name of the application in the database secrets engine.
+- The `default-context` is the default context in the database secrets engine.
+- The `profile-separator` is the separator used to separate the profile from the path in the database secrets engine.
+- The `profiles` is the list of profiles to use.
+- The `lifecycle` is the lifecycle of the database secrets engine.
+- The `lease-endpoints` is the lease endpoints in the database secrets engine.
+- The `min-renewal` is the minimum renewal in the database secrets engine.
+- The `expiry-threshold` is the expiry threshold in the database secrets engine.
+- The `lease-endpoints` is the lease endpoints in the database secrets engine.
+
+
 ### Option 2: use Spring profiles (best practice)
 
 In this option, Spring profiles enable using multiple paths in Vault for managing secrets across multiple environments (
@@ -298,7 +359,13 @@ Spring Cloud Vault:
 ```yaml
 logging:
   level:
+    com.zaxxer.hikari: DEBUG
+    org.springframework.boot.autoconfigure.jdbc: DEBUG
+    org.springframework.vault.core.lease: DEBUG
+    org.springframework.web.client: TRACE
     org.springframework.cloud.vault: TRACE
+    org.springframework.vault: TRACE
+    org.springframework.boot.context.config: DEBUG
 ```
 
 2. **Verify Injected Secrets via Actuator:**
@@ -421,7 +488,8 @@ $ rm terraform/terraform.tfstate
 ## References:
 
 - [Youtube tutorial - Postgres DB credentials rotation using Spring Cloud Vault](https://www.youtube.com/watch?v=qyBHFVPghFE)
-- [Github - source code](https://github.com/visa2learn/spring-cloud-vault-db-cred-rotation)
+- [Github - source code (used in this Youtube tutorial)](https://github.com/visa2learn/spring-cloud-vault-db-cred-rotation)
+- [Meduim article to understand how to use Spring Cloud Vault](https://medium.com/digitalfrontiers/manage-your-database-accounts-with-spring-cloud-vault-config-48cecb837a36)
 
 ## Next Step
 

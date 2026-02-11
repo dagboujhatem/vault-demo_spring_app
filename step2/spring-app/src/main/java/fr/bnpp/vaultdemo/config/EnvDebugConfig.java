@@ -17,12 +17,7 @@ public class EnvDebugConfig {
             System.out.println("spring.datasource.username = " +
                     env.getProperty("spring.datasource.username"));
             System.out.println("spring.datasource.password = " +
-                    (env.getProperty("spring.datasource.password") != null ? "***" : "null"));
-
-            System.out.println("spring.datasource.hikari.username = " +
-                    env.getProperty("spring.datasource.hikari.username"));
-            System.out.println("spring.datasource.hikari.password = " +
-                    (env.getProperty("spring.datasource.hikari.password") != null ? "***" : "null"));
+                    (env.getProperty("spring.datasource.password")));
             System.out.println("================================");
         };
     }
