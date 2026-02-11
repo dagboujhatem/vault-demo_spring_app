@@ -1,4 +1,8 @@
 spring:
+#  autoconfigure:
+#    exclude:
+#      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+#      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   docker:
     compose:
       enabled: false
@@ -61,6 +65,7 @@ spring:
 
   # JPA Configuration
   jpa:
+    defer-datasource-initialization: true
     hibernate:
       ddl-auto: none #  update
     show-sql: true
@@ -84,6 +89,13 @@ springdoc:
   show-actuator: true
 
 # Activate log TRACE
+#  DEBUG
+#  ERROR
+#  FATAL
+#  INFO
+#  OFF
+#  TRACE
+#  WARN
 logging:
   level:
     com.zaxxer.hikari: DEBUG

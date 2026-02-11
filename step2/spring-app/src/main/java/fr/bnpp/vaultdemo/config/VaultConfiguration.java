@@ -65,7 +65,7 @@ public class VaultConfiguration {
     }*/
 
     //
-    @Bean
+    /*@Bean
     @Primary
     public DataSource dataSource(
             Environment env
@@ -85,5 +85,5 @@ public class VaultConfiguration {
         ds.setMaxLifetime(30_000);
 
         return ds;
-    }
+    }*/
 }
