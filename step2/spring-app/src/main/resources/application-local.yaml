@@ -1,0 +1,107 @@
+spring:
+  docker:
+    compose:
+      enabled: false
+  main:
+    lazy-initialization: true
+  application:
+    name: spring-app
+  # Spring Config
+#  config:
+#    import: optional:vault:// # Pas besoin pour les secrets dynamique
+  # Spring Cloud Vault
+  cloud:
+    vault:
+      uri: ${VAULT_ADDR:http://localhost:8200}
+      authentication: TOKEN
+      token: root
+#      authentication: APPROLE
+#      app-role:
+#        role-id: ${VAULT_ROLE_ID:6b0b471a-275b-33eb-9c50-06bf2e609fad}
+#        secret-id: ${VAULT_SECRET_ID:35455c16-226c-8f11-0747-26e6c1232f07}
+      kv:
+        enabled: false
+      generic:
+        enabled: true
+        backend: secret
+      database:
+        enabled: true
+        backend: ${VAULT_DATABASE_BACKEND:database}
+        role: ${VAULT_DATABASE_ROLE:spring-app}
+        database-name: postgres-db
+        # Property names where credentials will be stored
+        username-property: spring.datasource.username
+        password-property: spring.datasource.password
+#        username-property: spring.datasource.hikari.username
+#        password-property: spring.datasource.hikari.password
+        # Active le rafraîchissement automatique des secrets
+        # Active le mécanisme de lease/refresh
+        lifecycle:
+          enabled: true
+          # Renew leases before they expire
+          min-renewal: 10s
+          # Grace period before expiry to trigger renewal
+          expiry-threshold: 1m
+          # How to handle lease renewal failures
+          lease-endpoints: SysLeases
+
+  # Database Configuration (PostgreSQL)
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/${POSTGRES_DB:test}
+    # username and password will be provided by Spring Cloud Vault
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      # Attendre la récupération du user/password from Vault
+      initialization-fail-timeout: -1
+      maximum-pool-size: 5
+      minimum-idle: 1
+      idle-timeout: 10000
+      # Allow connection refresh when credentials rotate
+      max-lifetime: 30000      # 30s (MUST be < 60s TTL)
+
+  # JPA Configuration
+  jpa:
+    hibernate:
+      ddl-auto: none #  update
+    show-sql: true
+    properties:
+      hibernate:
+        format-sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+# Swagger/OpenAPI Configuration
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    operations-sorter: alpha
+    tags-sorter: alpha
+    display-request-duration: true
+    doc-expansion: none
+  show-actuator: true
+
+# Activate log TRACE
+logging:
+  level:
+    com.zaxxer.hikari: DEBUG
+    org.springframework.boot.autoconfigure.jdbc: DEBUG
+    org.springframework.vault.core.lease: DEBUG
+    org.springframework.web.client: TRACE
+    org.springframework.cloud.vault: DEBUG
+    org.springframework.vault: DEBUG
+    org.springframework.boot.context.config: DEBUG
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    env:
+        show-values: ALWAYS

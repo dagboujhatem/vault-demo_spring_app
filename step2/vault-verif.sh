@@ -71,4 +71,11 @@ echo "----------------------------------------"
 echo "🎉 VALIDATION SUCCESSFUL"
 echo "Vault → PostgreSQL dynamic secrets are WORKING"
 
+echo "➡️ Testing SCRAM login with generated credentials..."
+
+docker exec -e PGPASSWORD="$DB_PASS" "$POSTGRES_CONTAINER" \
+  psql -h localhost -U "$DB_USER" -d "$POSTGRES_DB" -c "SELECT 1;" > /dev/null
+
+echo "✅ SCRAM authentication successful"
+
 

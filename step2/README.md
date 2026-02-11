@@ -418,6 +418,11 @@ $ docker-compose down
 $ rm terraform/terraform.tfstate
 ```
 
+## References:
+
+- [Youtube tutorial - Postgres DB credentials rotation using Spring Cloud Vault](https://www.youtube.com/watch?v=qyBHFVPghFE)
+- [Github - source code](https://github.com/visa2learn/spring-cloud-vault-db-cred-rotation)
+
 ## Next Step
 
 Let's verify that we have the credentials. Go to [Step 3](../step3/README.md).
