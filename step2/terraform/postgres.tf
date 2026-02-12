@@ -1,4 +1,4 @@
-# 1. Enable database secrets engine
+at# 1. Enable database secrets engine
 resource "vault_mount" "db" {
   type = "database"
   path = "database"
@@ -52,6 +52,8 @@ EOF
   ]
 
   revocation_statements = [
+    "REASSIGN OWNED BY \"{{name}}\" TO \"${var.postgres_admin_username}\";",
+    "DROP OWNED BY \"{{name}}\";",
     "DROP ROLE IF EXISTS \"{{name}}\";"
   ]
 
