@@ -1,5 +1,28 @@
 # Step 1: Spring load configuration from Vault (Static Secrets)
 
+## Table of Contents
+
+- [Installation](#installation)
+    - [Spring Boot 3.x vs 2.x Setups](#example-using-spring-boot-3x-spring-cloud-2023x)
+    - [Main differences between Spring B. 2 and Spring B. 3](#main-differences-between-spring-boot-2-and-3-for-vault)
+    - [Spring Boot vs Spring Cloud Starters](#spring-boot-starter-vault-config-vs-spring-cloud-starter-vault-config)
+- [Login to Vault: How it works?](#login-to-vault-how-it-works-in-spring-cloud-vault-)
+    - [1. Token Authentication](#1-login-with-token-authentication-method)
+    - [2. AppRole Authentication](#2-login-with-approle-authentication-method)
+    - [3. Kubernetes Authentication](#3-login-with-kubernetes-authentication-method)
+- [Step-by-Step Process Breakdown](#step-by-step-breakdown-of-the-static-secret-retrieval-process)
+- [Implementation in Spring Boot](#implementation-in-spring)
+    - [Option 1: Single Path (Simple)](#option-1-many-secrets-in-the-same-path-simple)
+    - [Option 2: Multi-Contexts](#option-2-one-secret-per-path-multi-contexts)
+    - [Option 3: Multi-env (Best Practices)](#option-3-multi-env--multi-secrets-best-practices)
+    - [Path Resolution (REX)](#rex--spring-cloud-vault-path-resolution)
+- [Infrastructure as Code (IaC) with Terraform](#infrastructure-as-code-iac-with-terraform)
+- [Running the Demo](#run-it)
+- [Verification and Checks](#check-it)
+- [Cleanup and Next Steps](#cleanup)
+
+## Overview
+
 In this step, we configure Vault to work with our application. This includes:
 
 1.  Enabling the **AppRole** authentication method.
@@ -104,7 +127,113 @@ With **Spring Boot 3.x**, the `bootstrap.yml` file is **no longer loaded automat
     <artifactId>spring-cloud-starter-bootstrap</artifactId>
 </dependency>
 ```
+#### **spring-boot-starter-vault-config** vs **spring-cloud-starter-vault-config**
 
+The difference between **spring-boot-starter-vault-config** and **spring-cloud-starter-vault-config** mainly comes from which ecosystem manages the integration with **HashiCorp Vault** and how configuration is loaded in **Spring Boot** applications.
+
+| Feature | **spring-boot-starter-vault-config** | **spring-cloud-starter-vault-config** |
+| --- | --- | --- |
+| **Ecosystem** | Spring Boot Native | Spring Cloud |
+| **Configuration Loading** | `spring.config.import` in `application.yml` | `bootstrap.yml` (with `spring-cloud-starter-bootstrap`) |
+| **Dependencies** | `spring-boot-starter-vault-config` | `spring-cloud-starter-vault-config` |
+| **Usage** | Standalone Spring Boot applications | Spring Cloud applications (with Spring Cloud Config, etc.) |
+
+
+#### 1️⃣ spring-cloud-starter-vault-config (Recommended)
+
+This starter belongs to Spring Cloud Vault.
+
+It provides full integration with Spring Cloud configuration mechanisms.
+
+**Features:** 
+
+* Integration with Spring Cloud Config ecosystem
+* Support for spring.config.import=vault://
+* Multiple secret backends (KV, database, AWS, etc.)
+* Dynamic secrets and rotation
+* Authentication methods:
+  - Token
+  - Kubernetes
+  - AppRole
+  - AWS IAM
+  - TLS certificates
+* Property sources automatically loaded at startup
+
+#### Maven dependency
+
+```xml 
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-bootstrap</artifactId>
+</dependency>
+```
+#### Typical configuration : 
+
+```yml 
+spring:
+  config:
+    import: vault://
+  cloud:
+    vault:
+      uri: http://localhost:8200
+      authentication: TOKEN
+      token: ${VAULT_TOKEN}
+```
+
+#### Use case : 
+
+- Microservices
+- Kubernetes deployments
+- Cloud-native applications
+- DevSecOps architectures
+
+This is the most commonly used dependency in production.
+
+#### 2️⃣ spring-boot-starter-vault-config
+
+This starter was historically used when Vault integration was **more Boot-centric**, but today it is **rarely used directly**.
+
+It typically comes from Spring Vault integration libraries.
+
+**Features**
+
+* Basic Vault integration
+* Less integration with Spring Cloud configuration
+* Limited advanced configuration features compared to Spring Cloud Vault
+
+#### Maven dependency
+
+```xml 
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-vault-config</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.vault</groupId>
+    <artifactId>spring-vault-core</artifactId>
+</dependency>
+```
+
+#### Typical configuration : 
+
+```yml 
+spring:
+  cloud:
+    vault:
+      uri: http://127.0.0.1:8200
+      token: <your-root-token>
+      scheme: http
+      kv:
+        enabled: true
+        backend: secret
+        default-context: application
+```
+
+#### Use case : 
+
+It may appear in older setups or direct **Spring Vault** client usage.
+
+You can see [this medium article](https://medium.com/@ShantKhayalian/setting-up-vault-in-spring-a-comprehensive-guide-bbdbb5ce82e6) for more information.
 
 ## Login to Vault: How it works in Spring Cloud Vault ?
 
