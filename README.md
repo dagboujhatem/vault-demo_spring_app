@@ -228,7 +228,7 @@ To integrate Vault in our application, we need to follow the following steps:
 
 See more on the [step1/README.md](./step1/README.md).
 
-### Step 2: Dynamic Secrets (Secret as a Service)
+### Step 2: Dynamic Secrets (Secret as a Service) with Postgres
 
 In this step, we remove the entrypoint in the previous step and changing the applications code.
 To integrate Vault in our application, we need to follow the following steps:
@@ -245,7 +245,21 @@ The goal is to use, at each time, a new database user (username+password) access
 
 ![Vault Dynamic Secrets](screenshots/6-secret-as-service.png)
 
-See more on the [step2/README.md](./step2/README.md).
+See more on the [step2/README.md](./step2/README.md).### Step 2:
+
+### Step 2 bis: Dynamic Secrets (Secret as a Service) with Elasticsearch
+
+In this step, we demonstrate how to use Vault's Database secrets engine with Elasticsearch.
+The process is similar to Step 2, but adapted for a NoSQL database:
+
+* Enable the **Database Secrets Engine**
+* Configure the connection to **Elasticsearch**
+* Create a **Vault Role** with specific Elasticsearch roles (e.g., `superuser`)
+* Refactor the Spring Boot application to use `spring-cloud-vault-config-databases` with Elasticsearch properties
+
+The application will receive dynamic credentials for Elasticsearch at runtime, with automatic lease renewal.
+
+See more on the [step2bis/README.md](./step2bis/README.md).
 
 ### Step 3: Encryption as a Service
 

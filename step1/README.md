@@ -74,6 +74,13 @@ In this case, we will have **only one path** to read the secrets from Vault.
 
 ```yaml
 spring:
+  # Spring Boot App name
+  application:
+    name: AP0001
+  # Spring Config
+  config:
+    import: vault://
+  # Spring Cloud Vault
   cloud:
     vault:
       kv:
@@ -151,6 +158,13 @@ You can use the following example :
 
 ```yaml
 spring:
+  # Spring Boot App name
+  application:
+    name: AP0001
+  # Spring Config
+  config:
+    import: vault://
+  # Spring Cloud Vault
   cloud:
     vault:
       kv:
@@ -162,7 +176,7 @@ spring:
           - AP0001/database
           - AP0001/api
           - AP0001/mail
- ````
+ ```
 ### Option 3: Multi-env + multi-secrets (Best Practices)
 
 If you have many secrets to loaded, you can use the `generic.application-name` to access to many path in the same time.
@@ -182,15 +196,16 @@ You can use the following example :
 
 ```yaml
 spring:
+  # Spring Boot App name
   application:
     name: AP0001
-
+  # Spring Active Profile
   profiles:
-    active: dev   # dev ou prod
-
+    active: dev   # dev,int,qua,perf,pprd or prod
+  # Spring Config
   config:
     import: vault://
-
+  # Spring Cloud Vault
   cloud:
     vault:
       uri: http://localhost:8200
@@ -212,7 +227,7 @@ spring:
         application-name:
           - AP0001/${spring.profiles.active}/database
           - AP0001/${spring.profiles.active}/api
- ````
+ ```
 
 
 ### NOTES : 
