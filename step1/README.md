@@ -514,6 +514,79 @@ env:
     value: TRACE
 ```
 
+#### Advantages:
+
+* cleaner structure
+* supports environments and profiles
+* easier secret reuse.
+
+#### Alternative: Using profiles for sub-contexts
+
+You can load multiple contexts with profiles.
+
+```yaml
+# Option 1: if we have secrets/AP0001-database
+spring:
+  application:
+    name: AP0001
+  config:
+    import: vault://
+  cloud:
+    vault:
+      kv:
+        backend: secrets
+        application-name: AP0001
+        profiles: database
+# Option 2: if we have secrets/AP0001/database
+spring:
+  application:
+    name: AP0001
+  config:
+    import: vault://
+  profiles:
+    active: database
+  cloud:
+    vault:
+      kv:
+        backend: secrets
+        application-name: AP0001
+        profile-separator: /
+```
+
+In this case, we need to create the path in Vault like : 
+
+```shell
+# Option 1: if we have secrets/AP0001-database
+secrets/AP0001-database
+# Option 2: if we have secrets/AP0001/database
+secrets/AP0001/database
+```
+
+In this case the default profile separator is `-`, so if you have `/` in the vault path you need to define the propertie `profile-separator: /` in your `application.yml`.
+
+##### Advantages:
+
+* works well for environment-specific configs
+* follows Spring profile conventions.
+
+#### Alternative: Multiple Vault imports (explicit paths)
+
+If you want precise control, you can import specific paths.
+
+```yaml
+spring:
+  application:
+    name: AP0001
+  config:
+    import:
+      - vault://secrets/AP0001/database
+```
+
+##### Advantages:
+
+* very explicit configuration
+* useful when different modules load different secrets.
+
 ### Option 2: One secret per path (multi-contexts)
 
 If you have many secrets to loaded, you can use the `generic.application-name` to access to many path in the same time.
@@ -530,6 +603,7 @@ You can use the following example :
 
 
 ```yaml
+# Option 1: Multiple contexts KV 
 spring:
   # Spring Boot App name
   application:
@@ -549,6 +623,29 @@ spring:
           - AP0001/database
           - AP0001/api
           - AP0001/mail
+# Option 2: using profiles
+spring:
+  application:
+    name: AP0001
+  config:
+    import: vault://
+  profiles:
+    active: database,api,mail
+  cloud:
+    vault:
+      kv:
+        backend: secrets
+        application-name: AP0001
+        profile-separator: /
+# Option 3: Clean enterprise structure (recommended)
+spring:
+  application:
+    name: AP0001
+  config:
+    import:
+      - vault://secrets/AP0001/database
+      - vault://secrets/AP0001/api
+      - vault://secrets/AP0001/mail
  ```
 ### Option 3: Multi-env + multi-secrets (Best Practices)
 
@@ -568,6 +665,7 @@ You can use the following example :
 
 
 ```yaml
+# Option 1: Multiple KV context
 spring:
   # Spring Boot App name
   application:
@@ -600,6 +698,35 @@ spring:
         application-name:
           - AP0001/${spring.profiles.active}/database
           - AP0001/${spring.profiles.active}/api
+
+# Option 2: Clean enterprise structure (recommended)
+spring:
+  application:
+    name: AP0001
+
+  profiles:
+    active: dev
+
+  config:
+    import:
+      - vault://secrets/AP0001/${spring.profiles.active}/database
+      - vault://secrets/AP0001/${spring.profiles.active}/api
+
+  cloud:
+    vault:
+      uri: http://localhost:8200
+      authentication: APPROLE
+
+      app-role:
+        role-id: ${VAULT_ROLE_ID}
+        secret-id: ${VAULT_SECRET_ID}
+
+      kv:
+        backend: secrets
+        version: 2
+        lifecycle:
+          enabled: false
+
  ```
 
 
