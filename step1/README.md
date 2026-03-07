@@ -757,6 +757,86 @@ spring:
 
 for more details : [Spring Cloud Vault - Config & REST endpoint](https://cloud.spring.io/spring-cloud-vault/reference/html/#vault.config.backends.kv.versioned)
 
+7. To disable database connection 
+
+* Disable Database versionning connection (flyway or liquibase):
+
+```yml
+spring:
+  # Disable flyway
+  flyway:
+    enabled: false
+  # Disable liquibase
+  liquibase:
+    enabled: false
+```
+
+Or using env variables : 
+
+```yml
+env: 
+  - name: SPRING_FLYWAY_ENABLED
+    value: "false"
+  - name: SPRING_LIQUIBASE_ENABLED
+    value: "false"
+```
+
+* Disable Postgres auto connexion :
+
+```yml
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+```
+
+Or using env variables : 
+
+```yml
+env:
+  - name: SPRING_AUTOCONFIGURE_EXCLUDE
+    value: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+```
+
+* Disable ElasticSearch auto connexion :
+
+
+```yml
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchClientAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration
+```
+
+Or using env variables : 
+
+```yml
+env:
+  - name: SPRING_AUTOCONFIGURE_EXCLUDE
+    value: org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchClientAutoConfiguration,org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration
+```
+
+* Disable MongoDB auto connexion :
+
+
+```yml
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+```
+
+Or using env variables : 
+
+```yml
+env:
+  - name: SPRING_AUTOCONFIGURE_EXCLUDE
+    value: org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration,org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+```
+
 ## Implementation in Spring Boot 2: 
 
 Exemple of config in `bootstrap.yml` (in Spring 2 is **Mondatory**):
