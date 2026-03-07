@@ -13,7 +13,138 @@ In this step, we configure Vault to work with our application. This includes:
 
 ![Spring Vault Static Secrets](screenshots/spring-vault.png)
 
-## How it works
+## Installation 
+
+The dependencies for **Spring Cloud Vault** depend on the version of **Spring Boot** you are using, because each Spring Boot generation is compatible with a specific **Spring Cloud** release.
+
+Below are the correct setups for **Spring Boot 3.x** and **Spring Boot 2.x**.
+
+### Example using **Spring Boot 3.x (Spring Cloud 2023.x)**: 
+
+Spring Boot 3.x uses Spring Cloud 2023.x.
+
+```xml
+  <!--  Properties -->
+  <properties>
+     <spring-cloud.version>2023.0.2</spring-cloud.version>
+  </properties>
+
+  <!--  Dependencies -->
+	<dependencies>
+    <!-- Spring Cloud Vault Dependencies -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-vault-config</artifactId>
+		</dependency>
+	</dependencies>
+
+  <!-- Dependency Management to import the Spring Cloud dependencies -->
+  <dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+```
+
+### Example using **Spring Boot 2.x (Spring Cloud 2021.x)**: 
+
+Spring Boot 2.x uses Spring Cloud 2021.x.
+
+```xml
+  <!--  Properties -->
+  <properties>
+     <spring-cloud.version>2021.0.8</spring-cloud.version>
+  </properties>
+
+  <!--  Dependencies -->
+	<dependencies>
+    <!-- Spring Cloud Vault Dependencies -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-vault-config</artifactId>
+		</dependency>
+	</dependencies>
+
+  <!-- Dependency Management to import the Spring Cloud dependencies -->
+  <dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+```
+
+### Main differences between Spring Boot 2 and 3 for Vault
+
+| Feature                   | Spring Boot 2   | Spring Boot 3          |
+| ------------------------- | --------------- | ---------------------- |
+| Config loading            | `bootstrap.yml` | `spring.config.import` |
+| Spring Cloud version      | 2021.x          | 2023.x                 |
+| Java version              | Java 8–11       | Java 17+               |
+| Recommended secret engine | KV v2           | KV v2                  |
+
+#### NOTE : 
+
+With **Spring Boot 3.x**, the `bootstrap.yml` file is **no longer loaded automatically** as it was in **Spring Boot 2.x**. However, you can still use it by adding the **Spring Cloud Bootstrap starter**. This is often needed for tools like **Spring Cloud Vault** or **Spring Cloud Config**.
+
+```xml 
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-bootstrap</artifactId>
+</dependency>
+```
+
+
+## Login to Vault: How it works in Spring Cloud Vault ?
+
+In this section, we will explain how to login to Vault using different authentication methods using Spring Cloud Vault.
+
+Available authentication methods:
+
+- Token
+- AppRole
+- Kubernetes
+
+![Spring Vault Static Secrets](screenshots/spring-vault-static-secrets.png)
+
+### 1. Login with Token authentication method
+
+
+#### Example : 
+
+```yaml
+spring:
+  # Spring Boot App name
+  application:
+    name: AP0001
+  # Spring Config
+  config:
+    import: vault://
+  # Spring Cloud Vault
+  cloud:
+    vault:
+      uri:  ${VAULT_ADDR:http://localhost:8200}
+      # Spring Cloud Vault authentication method (TOKEN authentication)
+      authentication: TOKEN
+      token: ${VAULT_TOKEN}
+      kv:
+        # Active l’utilisation du moteur KV (Key-Value)
+        enabled: true
+....        
+```
+
+### 2. Login with AppRole authentication method
 
 To login to Vault using AppRole authentication method, we need to create a role and provide the RoleID and SecretID to the application. In this step, we will use static secrets (RoleID and SecretID) to login to Vault. 
 
@@ -24,7 +155,57 @@ In the following schema, the Vault admin can create the role and policy, and the
 
 After getting the **token**, the application can send the token to the Vault to get the database credentials from the **static secret engine**.
 
-![Spring Vault Static Secrets](screenshots/spring-vault-static-secrets.png)
+#### Example : 
+
+```yaml
+spring:
+  # Spring Boot App name
+  application:
+    name: AP0001
+  # Spring Config
+  config:
+    import: vault://
+  # Spring Cloud Vault
+  cloud:
+    vault:
+      uri:  ${VAULT_ADDR:http://localhost:8200}
+      # Spring Cloud Vault authentication method (APPROLE authentication)
+      authentication: APPROLE
+      app-role:
+        role-id: ${VAULT_ROLE_ID}
+        secret-id: ${VAULT_SECRET_ID}
+      kv:
+        # Active l’utilisation du moteur KV (Key-Value)
+        enabled: true
+....        
+```
+
+### 3. Login with Kubernetes authentication method
+
+#### Example : 
+
+```yaml
+spring:
+  # Spring Boot App name
+  application:
+    name: AP0001
+  # Spring Config
+  config:
+    import: vault://
+  # Spring Cloud Vault
+  cloud:
+    vault:
+      uri:  ${VAULT_ADDR:http://localhost:8200}
+      # Spring Cloud Vault authentication method (KUBERNETES authentication)
+      authentication: KUBERNETES
+      kubernetes:
+        role: ap0001-role
+        service-account-token-file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      kv:
+        # Active l’utilisation du moteur KV (Key-Value)
+        enabled: true
+....        
+```
 
 ---
 ### Step-by-Step Breakdown of the Static Secret Retrieval Process
@@ -87,7 +268,7 @@ spring:
         backend: secrets
         application-name: AP0001/database
         default-context: ""
- ````
+ ```
 
  You can use it simply like this : 
 
