@@ -2,6 +2,7 @@
 
 ## Table of Contents
 
+- [Overview](#overview)
 - [Installation](#installation)
     - [Spring Boot 3.x vs 2.x Setups](#example-using-spring-boot-3x-spring-cloud-2023x)
     - [Main differences between Spring B. 2 and Spring B. 3](#main-differences-between-spring-boot-2-and-3-for-vault)
@@ -11,11 +12,12 @@
     - [2. AppRole Authentication](#2-login-with-approle-authentication-method)
     - [3. Kubernetes Authentication](#3-login-with-kubernetes-authentication-method)
 - [Step-by-Step Process Breakdown](#step-by-step-breakdown-of-the-static-secret-retrieval-process)
-- [Implementation in Spring Boot](#implementation-in-spring)
+- [Implementation in Spring Boot 3](#implementation-in-spring-boot-3-)
     - [Option 1: Single Path (Simple)](#option-1-many-secrets-in-the-same-path-simple)
     - [Option 2: Multi-Contexts](#option-2-one-secret-per-path-multi-contexts)
     - [Option 3: Multi-env (Best Practices)](#option-3-multi-env--multi-secrets-best-practices)
-    - [Path Resolution (REX)](#rex--spring-cloud-vault-path-resolution)
+- [Implementation in Spring Boot 2](#implementation-in-spring-boot-2-)
+- [Path Resolution (REX)](#rex--spring-cloud-vault-path-resolution)
 - [Infrastructure as Code (IaC) with Terraform](#infrastructure-as-code-iac-with-terraform)
 - [Running the Demo](#run-it)
 - [Verification and Checks](#check-it)
@@ -249,6 +251,26 @@ Available authentication methods:
 
 ### 1. Login with Token authentication method
 
+#### Use cases
+
+* Local development environments
+* CI/CD pipelines
+* Testing environments
+* Simple integrations or scripts
+
+#### Advantages
+
+* Very easy to configure
+* Quick setup for development and testing
+* No additional infrastructure configuration required
+* Direct authentication with Vault
+
+#### Limitations
+
+* Tokens must be stored securely
+* Token leakage can expose secrets
+* Manual rotation may be required
+* Not recommended for production workload
 
 #### Example : 
 
@@ -284,6 +306,26 @@ In the following schema, the Vault admin can create the role and policy, and the
 
 After getting the **token**, the application can send the token to the Vault to get the database credentials from the **static secret engine**.
 
+#### Use cases
+
+* Machine-to-machine authentication
+* Backend services running outside Kubernetes
+* CI/CD pipelines
+* VM-based workloads
+
+#### Advantages
+
+* Strong authentication for applications
+* Supports secret rotation
+* Allows separation between Role ID and Secret ID
+* More secure than static tokens
+* Works well for automated systems and service accounts
+
+#### Limitations
+
+* Requires management of Role IDs and Secret IDs
+* Slightly more complex setup than token authentication
+
 #### Example : 
 
 ```yaml
@@ -310,6 +352,27 @@ spring:
 ```
 
 ### 3. Login with Kubernetes authentication method
+
+#### Use cases
+
+* Applications running inside Kubernetes clusters
+* Microservices architectures
+* Cloud-native deployments
+* Platforms like EKS, AKS, or GKE
+
+#### Advantages
+
+* No static credentials required
+* Uses Kubernetes ServiceAccount identity
+* Automatic authentication for pods
+* Highly secure and scalable
+* Ideal for dynamic and containerized environments
+* Integrates naturally with Kubernetes RBAC and service accounts
+
+#### Limitations
+
+* Requires Kubernetes configuration in Vault
+* Slightly more complex initial setup
 
 #### Example : 
 
@@ -362,7 +425,7 @@ spring:
 6. **Authenticate and Retrieve Secrets**
     - The Spring application authenticates using RoleID and SecretID.
     - Retrieve the database credentials or other secrets based on the defined configuration.
-## Implementation in Spring
+## Implementation in Spring Boot 3 :
 
 ### Available Options:
 
@@ -567,7 +630,7 @@ spring:
 
 for more details : [Spring Cloud Vault - Config & REST endpoint](https://cloud.spring.io/spring-cloud-vault/reference/html/#vault.config.backends.kv.versioned)
 
-### Example for Spring 2: 
+## Implementation in Spring Boot 2: 
 
 Exemple of config in `bootstrap.yml` (in Spring 2 is **Mondatory**):
 
