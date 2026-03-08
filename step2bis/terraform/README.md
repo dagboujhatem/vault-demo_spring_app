@@ -17,7 +17,12 @@
 
 ##  Prepare your database Elasticsearch
 
-To prepare your database Elasticsearch, you need to create a user with the necessary permissions.
+To prepare your Elasticsearch cluster, ensure that security is enabled and you have a user with the `manage_security` cluster privilege. 
+
+If you are using the provided `docker-compose.yml`, these settings are already handled via environment variables. Vault will use the `elastic` user (configured in Vault) to create dynamic roles.
+
+> [!IMPORTANT]
+> For Vault to manage Elasticsearch, the connection must be configured with a user that has sufficient privileges to create other users and roles.
 
 ```sql
 -- Step 1. Verify if the user named 'user' has permissions to create roles and super user:
