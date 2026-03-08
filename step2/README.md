@@ -633,4 +633,4 @@ $ rm terraform/terraform.tfstate
 
 ## Next Step
 
-Let's verify that we have the credentials. Go to [Step 3](../step3/README.md).
+Done with Postgres dynamic secrets? Let's move to Elasticsearch! Go to [Step 2 bis](../step2bis/README.md).

@@ -29,12 +29,12 @@ In this step, we configure Vault to work with our application. This includes:
 
 1.  Enabling the **AppRole** authentication method.
 2.  Creating a **Policy** that allows reading database secrets.
-3.  Configuring the **Database Secret Engine** (Postgres).
+3.  Configuring the **KV Secret Engine** (Static).
 4.  Creating a **Role** that maps the policy to the application.
 5.  Configuring the **Spring Boot** application to use Vault:
     - Use the AppRole authentication method.
     - Use the static secrets (RoleID and SecretID) to login to Vault.
-    - Use the database secret engine to get the database credentials (static secrets).
+    - Use the KV secret engine to get the database credentials (static secrets).
 
 ![Spring Vault Static Secrets](screenshots/spring-vault.png)
 
@@ -129,6 +129,7 @@ With **Spring Boot 3.x**, the `bootstrap.yml` file is **no longer loaded automat
     <artifactId>spring-cloud-starter-bootstrap</artifactId>
 </dependency>
 ```
+
 #### **spring-boot-starter-vault-config** vs **spring-cloud-starter-vault-config**
 
 The difference between **spring-boot-starter-vault-config** and **spring-cloud-starter-vault-config** mainly comes from which ecosystem manages the integration with **HashiCorp Vault** and how configuration is loaded in **Spring Boot** applications.
@@ -409,9 +410,9 @@ spring:
 2. **Create a Policy for Access**
     - Define a **Vault Policy** that provides read access to the required secrets (e.g., database credentials).
 
-3. **Set Up the Database Secrets Engine**
-    - Enable the **Database Secret Engine** in Vault (e.g., Postgres).
-    - Configure the database engine to generate secrets dynamically or provide static ones.
+3. **Set Up the KV Secrets Engine**
+    - Enable the **KV Secret Engine** in Vault (v2 recommended).
+    - Store the static database credentials.
 
 4. **Define a Role for Application Mapping**
     - Link the previously created policy to a specific role.
@@ -1009,4 +1010,4 @@ $ rm terraform/terraform.tfstate
 
 ## Next Step
 
-Once configured, we need to get the credentials (RoleID and SecretID) to login. Go to [Step 2](../step2/README.md).
+Done with static secrets? Let's move to dynamic secrets (Secret as a Service)! Go to [Step 2](../step2/README.md).

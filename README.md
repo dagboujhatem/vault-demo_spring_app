@@ -245,7 +245,7 @@ The goal is to use, at each time, a new database user (username+password) access
 
 ![Vault Dynamic Secrets](screenshots/6-secret-as-service.png)
 
-See more on the [step2/README.md](./step2/README.md).### Step 2:
+See more on the [step2/README.md](./step2/README.md).
 
 ### Step 2 bis: Dynamic Secrets (Secret as a Service) with Elasticsearch
 

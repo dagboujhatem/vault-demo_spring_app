@@ -1,5 +1,15 @@
 # Step 0: Starting Point (Spring boot application with REST API & Postgres database)
 
+## Table of Contents
+
+- [Overview](#architecture)
+- [Architecture](#architecture)
+- [The API](#the-api)
+- [Installation](#installation)
+- [Environment Configuration](#environment-configuration)
+- [Running the application](#run-it)
+- [Next Step](#next-step)
+
 In this step, we prepare the ground for our Spring boot application by starting our base stack. This represents the application *before* any Vault integration.
 
 ## Architecture
@@ -28,6 +38,32 @@ Once the application is started, access the interactive Swagger documentation:
 - **Swagger UI** : [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 - **OpenAPI JSON** : [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
 - **OpenAPI YAML** : [http://localhost:8080/v3/api-docs.yaml](http://localhost:8080/v3/api-docs.yaml)
+
+## Installation 
+
+Since this is the base step, the application uses standard Spring Boot dependencies for a REST API with JPA.
+
+```xml
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+	</dependencies>
+```
 
 ## Environment Configuration
 
