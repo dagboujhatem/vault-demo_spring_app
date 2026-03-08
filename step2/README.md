@@ -1,5 +1,32 @@
 # Step 2: Spring load configuration from Vault (Dynamic Secrets)
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Installation](#installation)
+  - [Spring Boot 3.x Setups](#example-using-spring-boot-3x-spring-cloud-2023x)
+  - [Spring Boot 2.x Setups](#example-using-spring-boot-2x-spring-cloud-2021x)
+  - [Main differences between Spring Boot 2 and 3](#main-differences-between-spring-boot-2-and-3-for-vault)
+  - [spring-boot-starter-vault-config vs spring-cloud-starter-vault-config](#spring-boot-starter-vault-config-vs-spring-cloud-starter-vault-config)
+- [How it works](#how-it-works)
+  - [Step-by-Step Breakdown of the Dynamic Secret Retrieval Process](#step-by-step-breakdown-of-the-dynamic-secret-retrieval-process)
+  - [Vault’s Role in Managing Lease, TTL, and Renewability](#vaults-role-in-managing-lease-ttl-and-renewability)
+  - [Summary](#summary)
+- [Implementation in Spring](#implementation-in-spring)
+  - [Available Options](#available-options)
+  - [Option 1: without Spring profiles (simple configuration)](#option-1-without-spring-profiles-simple-configuration)
+  - [Option 2: use Spring profiles (best practice)](#option-2-use-spring-profiles-best-practice)
+  - [Debug Spring Cloud Vault communication & variables injection](#debug-spring-cloud-vault-communication--variables-injection)
+- [Infrastructure as Code (IaC) with Terraform](#infrastructure-as-code-iac-with-terraform)
+- [Run it](#run-it)
+- [Check it](#check-it)
+- [Access pgadmin](#access-pgadmin)
+- [Cleanup](#cleanup)
+- [References](#references)
+- [Next Step](#next-step)
+
+## Overview
+
 This step use Hashicorp Vault dynamic secrets with database. This includes:
 
 1.  Enabling the **AppRole** authentication method.
@@ -9,9 +36,122 @@ This step use Hashicorp Vault dynamic secrets with database. This includes:
 5.  Configuring the **Spring Boot** application to use Vault:
     - Use the AppRole authentication method.
     - Use the static secrets (RoleID and SecretID) to login to Vault.
-    - Use the database secret engine to get the database credentials (static secrets).
+    - Use the database secret engine to get the database credentials (dynamic secrets).
 
 ![Spring Vault Dynamic Secrets](screenshots/spring-vault.png)
+
+## Installation 
+
+The dependencies for **Spring Cloud Vault** depend on the version of **Spring Boot** you are using, because each Spring Boot generation is compatible with a specific **Spring Cloud** release.
+
+Below are the correct setups for **Spring Boot 3.x** and **Spring Boot 2.x**.
+
+### Example using **Spring Boot 3.x (Spring Cloud 2023.x)**: 
+
+Spring Boot 3.x uses Spring Cloud 2023.x.
+
+```xml
+  <!--  Properties -->
+  <properties>
+     <spring-cloud.version>2023.0.2</spring-cloud.version>
+  </properties>
+
+  <!--  Dependencies -->
+	<dependencies>
+    <!-- Spring Cloud Vault Dependencies -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-vault-config</artifactId>
+		</dependency>
+    <!-- Addition for Dynamic Secrets (Databases) -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-vault-config-databases</artifactId>
+		</dependency>
+	</dependencies>
+
+  <!-- Dependency Management to import the Spring Cloud dependencies -->
+  <dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+```
+
+### Example using **Spring Boot 2.x (Spring Cloud 2021.x)**: 
+
+Spring Boot 2.x uses Spring Cloud 2021.x.
+
+```xml
+  <!--  Properties -->
+  <properties>
+     <spring-cloud.version>2021.0.8</spring-cloud.version>
+  </properties>
+
+  <!--  Dependencies -->
+	<dependencies>
+    <!-- Spring Cloud Vault Dependencies -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-vault-config</artifactId>
+		</dependency>
+    <!-- Addition for Dynamic Secrets (Databases) -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-vault-config-databases</artifactId>
+		</dependency>
+	</dependencies>
+
+  <!-- Dependency Management to import the Spring Cloud dependencies -->
+  <dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+```
+
+### Main differences between Spring Boot 2 and 3 for Vault
+
+| Feature                   | Spring Boot 2   | Spring Boot 3          |
+| ------------------------- | --------------- | ---------------------- |
+| Config loading            | `bootstrap.yml` | `spring.config.import` |
+| Spring Cloud version      | 2021.x          | 2023.x                 |
+| Java version              | Java 8–11       | Java 17+               |
+| Recommended secret engine | KV v2 / Dynamic | KV v2 / Dynamic        |
+
+#### NOTE : 
+
+With **Spring Boot 3.x**, the `bootstrap.yml` file is **no longer loaded automatically** as it was in **Spring Boot 2.x**. However, you can still use it by adding the **Spring Cloud Bootstrap starter**. This is often needed for tools like **Spring Cloud Vault** or **Spring Cloud Config**.
+
+```xml 
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-bootstrap</artifactId>
+</dependency>
+```
+
+#### **spring-boot-starter-vault-config** vs **spring-cloud-starter-vault-config**
+
+The difference between **spring-boot-starter-vault-config** and **spring-cloud-starter-vault-config** mainly comes from which ecosystem manages the integration with **HashiCorp Vault** and how configuration is loaded in **Spring Boot** applications.
+
+| Feature | **spring-boot-starter-vault-config** | **spring-cloud-starter-vault-config** |
+| --- | --- | --- |
+| **Ecosystem** | Spring Boot Native | Spring Cloud |
+| **Configuration Loading** | `spring.config.import` in `application.yml` | `bootstrap.yml` (with `spring-cloud-starter-bootstrap`) |
+| **Dependencies** | `spring-boot-starter-vault-config` | `spring-cloud-starter-vault-config` |
+| **Usage** | Standalone Spring Boot applications | Spring Cloud applications (with Spring Cloud Config, etc.) |
 
 ## How it works
 
